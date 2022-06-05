@@ -1,0 +1,123 @@
+package com.sweetpoint.demo.service;
+
+import com.sweetpoint.demo.constant.ConstantApp;
+import com.sweetpoint.demo.domain.dao.UserDao;
+import com.sweetpoint.demo.domain.dto.UserDto;
+import com.sweetpoint.demo.repository.UserRepository;
+import com.sweetpoint.demo.util.ResponseUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
+@Service
+public class UserService implements UserDetailsService {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDao user = userRepository.getDistinctTopByUsername(username);
+
+        if (user == null){
+            throw new UsernameNotFoundException("Username Not Found");
+        }
+        return user;
+
+    }
+
+    public ResponseEntity<Object> getAllUser(){
+        try{
+            log.info("Getting all user's information");
+            List<UserDao> userDaoList = userRepository.findAll();
+            List<UserDto> userDtoList = new ArrayList<>();
+
+            for(UserDao userDao: userDaoList){
+                userDtoList.add(UserDto.builder()
+                        .id(userDao.getId())
+                        .email(userDao.getEmail())
+                        .name(userDao.getName())
+                        .build());
+            }
+
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, userDtoList, HttpStatus.OK);
+        }catch (Exception e){
+            log.error("Got an error when getting all user's information, error : {}",e.getMessage());
+            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Object> getUserById(Long id){
+        try{
+            log.info("Getting user by id,id : {}",id);
+            Optional<UserDao> userDaoOptional = userRepository.findById(id);
+
+            if (userDaoOptional.isEmpty()){
+                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
+            }
+            UserDao userDao = userDaoOptional.get();
+
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+                    .id(userDao.getId())
+                    .email(userDao.getEmail())
+                    .name(userDao.getName())
+                    .build(), HttpStatus.OK);
+        }catch (Exception e){
+            log.error("Got an error when getting user by id, error : {}",e.getMessage());
+            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Object> updateUser(Long id, UserDto request){
+        try {
+            log.info("Updating user with id : {}",id);
+            Optional<UserDao> userDaoOptional = userRepository.findById(id);
+            if (userDaoOptional.isEmpty()){
+                log.info("User not found");
+                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+            }
+            UserDao userDao = userDaoOptional.get();
+            userDao.setEmail(request.getEmail());
+            userDao.setUsername(request.getUsername());
+            userDao.setName(request.getName());
+            userRepository.save(userDao);
+
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+                    .id(userDao.getId())
+                    .email(userDao.getEmail())
+                    .name(userDao.getName())
+                    .build(),HttpStatus.OK);
+
+        }catch (Exception e){
+            log.error("Got an error when updating user's information,Error : {}",e.getMessage());
+            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Object> deleteUser(Long id){
+        try {
+            log.info("Deleting user with id : {}",id);
+            Optional<UserDao> userDaoOptional = userRepository.findById(id);
+            if (userDaoOptional.isEmpty()){
+                log.info("User not found");
+                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+            }
+            userRepository.delete(userDaoOptional.get());
+            return ResponseUtil.build(ConstantApp.KEY_FOUND,null,HttpStatus.OK);
+
+        }catch (Exception e){
+            log.error("Got an error when deleting user, error : {}",e.getMessage());
+            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+}
