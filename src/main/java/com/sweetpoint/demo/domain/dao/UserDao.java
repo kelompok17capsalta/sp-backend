@@ -39,7 +39,7 @@ public class UserDao extends BaseDao implements UserDetails {
     private String name;
 
 //    @Column(name = "role", nullable = false)
-//    private Integer role;
+//    private String role;
 
     @Column(columnDefinition ="boolean default true")
     private boolean active = true;

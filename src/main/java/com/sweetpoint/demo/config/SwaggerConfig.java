@@ -1,6 +1,6 @@
 package com.sweetpoint.demo.config;
 
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -32,7 +32,7 @@ import java.util.Collections;
                     "Sweet Point",
                     "1.0",
                     "Terms of service",
-                    new Contact("Anggita Br Sinaga", "https://github.com/kelompok17capsalta/sp-backend", "anggisinaga9543@gmail.com"),
+                    new Contact("Sweet Point Team", "https://github.com/kelompok17capsalta/sp-backend", "anggisinaga9543@gmail.com"),
                     "Apache License Version 2.0",
                     "https://www.apache.org/licenses/LICENSE-2.0",
                     Collections.emptyList());
