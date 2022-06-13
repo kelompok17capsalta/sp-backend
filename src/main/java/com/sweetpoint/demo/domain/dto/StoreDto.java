@@ -14,12 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDto {
+public class StoreDto {
     private Long id;
-    private String email;
-    private String username;
-    private String password;
-    private String name;
-//    private String role;
-    private Boolean active;
+    private String store_name;
+    private String description;
 }
