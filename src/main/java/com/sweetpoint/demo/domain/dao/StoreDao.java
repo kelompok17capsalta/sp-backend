@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
@@ -18,13 +19,16 @@ import javax.persistence.*;
 @Table(name = "M_STORE")
 @SQLDelete(sql = "UPDATE M_STORE SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class StoreDao extends BaseDao {
+public class StoreDao extends BaseDao implements Serializable {
+
+    private static final long serialVersionUID = -4130848546964499314L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "store_name", nullable = false)
-    private String store_name;
+    private String storeName;
 
     @Column(name = "description", nullable = false)
     private String description;

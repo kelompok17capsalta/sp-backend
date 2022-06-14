@@ -31,7 +31,7 @@ public class TransactionService {
 
             return ResponseUtil.build(ConstantApp.KEY_FOUND, TransactionDto.builder()
                     .id(transactionDao.getId())
-                    .transaction_name(transactionDao.getTransaction_name())
+                    .transactionName(transactionDao.getTransactionName())
                     .value(transactionDao.getValue())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
@@ -43,17 +43,14 @@ public class TransactionService {
     public ResponseEntity<Object> createNewTransaction(TransactionDto transactionDto){
         try{
             TransactionDao transactionDao = TransactionDao.builder()
-                    .transaction_name(transactionDto.getTransaction_name())
+                    .transactionName(transactionDto.getTransactionName())
                     .value(transactionDto.getValue())
                     .build();
             transactionRepository.save(transactionDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND,TransactionDto.builder()
-                    .id(transactionDao.getId())
-                    .transaction_name(transactionDao.getTransaction_name())
-                    .value(transactionDao.getValue()), HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, null, HttpStatus.OK);
         } catch (Exception e){
-            log.error("Get an error create new child, Error: {}", e.getMessage());
+            log.error("Get an error create new transaction, Error: {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -67,15 +64,15 @@ public class TransactionService {
                 return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             TransactionDao transactionDao = transactionDaoOptional.get();
-            transactionDao.setTransaction_name(request.getTransaction_name());
+            transactionDao.setTransactionName(request.getTransactionName());
             transactionDao.setValue(request.getValue());
             transactionRepository.save(transactionDao);
 
             return ResponseUtil.build(ConstantApp.KEY_FOUND, TransactionDto.builder()
                     .id(transactionDao.getId())
-                    .transaction_name(transactionDao.getTransaction_name())
+                    .transactionName(transactionDao.getTransactionName())
                     .value(transactionDao.getValue())
-                    .build(),HttpStatus.OK);
+                    .build(), HttpStatus.OK);
 
         }catch (Exception e){
             log.error("Got an error when updating transaction's detail, error : {}",e.getMessage());

@@ -30,7 +30,7 @@ public class StoreService {
             for(StoreDao storeDao: storeDaoList){
                 storeDtoList.add(StoreDto.builder()
                         .id(storeDao.getId())
-                        .store_name(storeDao.getStore_name())
+                        .storeName(storeDao.getStoreName())
                         .description(storeDao.getDescription())
                         .build());
             }
@@ -54,7 +54,7 @@ public class StoreService {
 
             return ResponseUtil.build(ConstantApp.KEY_FOUND, StoreDto.builder()
                     .id(storeDao.getId())
-                    .store_name(storeDao.getStore_name())
+                    .storeName(storeDao.getStoreName())
                     .description(storeDao.getDescription())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
@@ -66,15 +66,12 @@ public class StoreService {
     public ResponseEntity<Object> createNewStore(StoreDto storeDto){
         try{
             StoreDao storeDao = StoreDao.builder()
-                    .store_name(storeDto.getStore_name())
+                    .storeName(storeDto.getStoreName())
                     .description(storeDto.getDescription())
                     .build();
             storeRepository.save(storeDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND,StoreDto.builder()
-                    .id(storeDao.getId())
-                    .store_name(storeDao.getStore_name())
-                    .description(storeDao.getDescription()), HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, null, HttpStatus.OK);
         } catch (Exception e){
             log.error("Get an error create new store, Error: {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -90,13 +87,13 @@ public class StoreService {
                 return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             StoreDao storeDao = storeDaoOptional.get();
-            storeDao.setStore_name(request.getStore_name());
+            storeDao.setStoreName(request.getStoreName());
             storeDao.setDescription(request.getDescription());
             storeRepository.save(storeDao);
 
             return ResponseUtil.build(ConstantApp.KEY_FOUND, StoreDto.builder()
                     .id(storeDao.getId())
-                    .store_name(storeDao.getStore_name())
+                    .storeName(storeDao.getStoreName())
                     .description(storeDao.getDescription())
                     .build(),HttpStatus.OK);
 

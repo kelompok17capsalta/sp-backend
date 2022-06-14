@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -41,18 +42,43 @@ public class AuthService {
             return ResponseUtil.build(ConstantApp.EMAIL_REGISTERED, null, HttpStatus.BAD_REQUEST);
         }
 
-        UserDao userDao = new UserDao();
-        userDao.setEmail(req.getEmail());
-        userDao.setUsername(req.getUsername());
-        userDao.setPassword(passwordEncoder.encode(req.getPassword()));
-        userDao.setName(req.getName());
-        userRepository.save(userDao);
-        return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
-                .id(userDao.getId())
-                .email(userDao.getEmail())
-                .username(userDao.getUsername())
-                .name(userDao.getName())
-                .build(), HttpStatus.OK);
+        if (req.getRole() == null || req.getRole().equals("User") || !req.getRole().equals("User")) {
+            UserDao userDao = new UserDao();
+            userDao.setEmail(req.getEmail());
+            userDao.setUsername(req.getUsername());
+            userDao.setPassword(passwordEncoder.encode(req.getPassword()));
+            userDao.setName(req.getName());
+            userDao.setRole("User");
+
+            userRepository.save(userDao);
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+                    .id(userDao.getId())
+                    .email(userDao.getEmail())
+                    .username(userDao.getUsername())
+                    .name(userDao.getName())
+                    .role(userDao.getRole())
+                    .build(), HttpStatus.OK);
+        }
+
+//        if (req.getRole().equals("Admin")) {
+//            UserDao userDao = new UserDao();
+//            userDao.setEmail(req.getEmail());
+//            userDao.setUsername(req.getUsername());
+//            userDao.setPassword(passwordEncoder.encode(req.getPassword()));
+//            userDao.setName(req.getName());
+//            userDao.setRole("Admin");
+//
+//            userRepository.save(userDao);
+//            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+//                    .id(userDao.getId())
+//                    .email(userDao.getEmail())
+//                    .username(userDao.getUsername())
+//                    .name(userDao.getName())
+//                    .role(userDao.getRole())
+//                    .build(), HttpStatus.OK);
+//        }
+
+        return null;
     }
 
 
