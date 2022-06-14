@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 
 @Data
 @Builder
@@ -14,12 +16,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDto {
+public class UserDto implements Serializable {
+
+    private static final long serialVersionUID = -7295118090882114533L;
+
     private Long id;
     private String email;
     private String username;
     private String password;
     private String name;
-//    private String role;
+    private String role;
     private Boolean active;
 }

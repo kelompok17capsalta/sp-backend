@@ -23,7 +23,7 @@ import java.util.Collection;
 @Where(clause = "deleted_at IS NULL")
 public class UserDao extends BaseDao implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "email", nullable = false)
@@ -38,8 +38,8 @@ public class UserDao extends BaseDao implements UserDetails {
     @Column(name = "name", nullable = false)
     private String name;
 
-//    @Column(name = "role", nullable = false)
-//    private String role;
+    @Column(name = "role")
+    private String role;
 
     @Column(columnDefinition ="boolean default true")
     private boolean active = true;
