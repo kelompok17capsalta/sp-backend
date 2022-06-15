@@ -16,8 +16,8 @@ import java.io.Serializable;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "M_STORE")
-@SQLDelete(sql = "UPDATE M_STORE SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "m_store")
+@SQLDelete(sql = "UPDATE m_store SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class StoreDao extends BaseDao implements Serializable {
 

@@ -18,8 +18,8 @@ import java.util.Collection;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "M_USERS")
-@SQLDelete(sql = "UPDATE M_USERS SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "m_users")
+@SQLDelete(sql = "UPDATE m_users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class UserDao extends BaseDao implements UserDetails {
     @Id
