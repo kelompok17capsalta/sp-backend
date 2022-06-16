@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @Log4j2
 @RequestMapping("v1/auth")
@@ -22,5 +24,10 @@ public class AuthController {
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody UserDto req){
         return authService.authenticateAndGenerateToken(req);
+    }
+
+    @GetMapping(value = "/info")
+    public ResponseEntity<?> generateData(HttpServletRequest request){
+        return ResponseEntity.ok(authService.generateData(request));
     }
 }

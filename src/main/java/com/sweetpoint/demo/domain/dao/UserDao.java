@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 
 @Data
@@ -21,7 +22,10 @@ import java.util.Collection;
 @Table(name = "m_users")
 @SQLDelete(sql = "UPDATE m_users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class UserDao extends BaseDao implements UserDetails {
+public class UserDao extends BaseDao implements UserDetails, Serializable {
+
+    private static final long serialVersionUID = -1222855661126160788L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -37,6 +41,9 @@ public class UserDao extends BaseDao implements UserDetails {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "point")
+    private Integer point;
 
     @Column(name = "role")
     private String role;

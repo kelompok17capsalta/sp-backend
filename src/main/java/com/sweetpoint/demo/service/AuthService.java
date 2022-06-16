@@ -1,5 +1,6 @@
 package com.sweetpoint.demo.service;
 
+import com.sweetpoint.demo.domain.dto.DataResponse;
 import com.sweetpoint.demo.security.JwtTokenProvider;
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.UserDao;
@@ -18,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Slf4j
@@ -48,6 +51,7 @@ public class AuthService {
             userDao.setUsername(req.getUsername());
             userDao.setPassword(passwordEncoder.encode(req.getPassword()));
             userDao.setName(req.getName());
+            userDao.setPoint(0);
             userDao.setRole("User");
 
             userRepository.save(userDao);
@@ -56,6 +60,7 @@ public class AuthService {
                     .email(userDao.getEmail())
                     .username(userDao.getUsername())
                     .name(userDao.getName())
+                    .point(userDao.getPoint())
                     .role(userDao.getRole())
                     .build(), HttpStatus.OK);
         }
@@ -100,5 +105,16 @@ public class AuthService {
             log.error(e.getMessage(), e);
             return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public DataResponse generateData(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        String token = bearerToken.substring(7);
+
+        DataResponse dataResponse = new DataResponse();
+        dataResponse.setEmail(jwtTokenProvider.getEmail(token));
+        dataResponse.setName(jwtTokenProvider.getName(token));
+        dataResponse.setPoint(jwtTokenProvider.getPoint(token));
+        return dataResponse;
     }
 }

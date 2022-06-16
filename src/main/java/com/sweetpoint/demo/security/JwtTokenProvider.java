@@ -30,6 +30,9 @@ public class JwtTokenProvider {
 
         Map<String,Object> claims = new HashMap<>();
         claims.put("username", userDao.getUsername());
+        claims.put("email", userDao.getEmail());
+        claims.put("name", userDao.getName());
+        claims.put("point", userDao.getPoint());
 
         return Jwts.builder()
                 .setId(userDao.getId().toString())
@@ -63,4 +66,20 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.get("username").toString();
     }
+
+    public String getEmail(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("email").toString();
+    }
+
+    public String getName(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("name").toString();
+    }
+
+    public Integer getPoint(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Integer.valueOf(claims.get("point").toString());
+    }
+
 }
