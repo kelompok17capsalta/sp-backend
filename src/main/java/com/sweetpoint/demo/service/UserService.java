@@ -23,9 +23,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private RoleService roleService;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDao user = userRepository.getDistinctTopByUsername(username);
@@ -36,14 +33,6 @@ public class UserService implements UserDetailsService {
         return user;
 
     }
-
-//    private Set<SimpleGrantedAuthority> getAuthority(UserDao user) {
-//        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-//        user.getRoles().forEach(role -> {
-//            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
-//        });
-//        return authorities;
-//    }
 
     public ResponseEntity<Object> getAllUser(){
         try{
