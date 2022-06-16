@@ -65,24 +65,6 @@ public class AuthService {
                     .build(), HttpStatus.OK);
         }
 
-//        if (req.getRole().equals("Admin")) {
-//            UserDao userDao = new UserDao();
-//            userDao.setEmail(req.getEmail());
-//            userDao.setUsername(req.getUsername());
-//            userDao.setPassword(passwordEncoder.encode(req.getPassword()));
-//            userDao.setName(req.getName());
-//            userDao.setRole("Admin");
-//
-//            userRepository.save(userDao);
-//            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
-//                    .id(userDao.getId())
-//                    .email(userDao.getEmail())
-//                    .username(userDao.getUsername())
-//                    .name(userDao.getName())
-//                    .role(userDao.getRole())
-//                    .build(), HttpStatus.OK);
-//        }
-
         return null;
     }
 
@@ -107,7 +89,7 @@ public class AuthService {
         }
     }
 
-    public DataResponse generateData(HttpServletRequest request) {
+    public ResponseEntity<Object> generateData(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         String token = bearerToken.substring(7);
 
@@ -115,6 +97,6 @@ public class AuthService {
         dataResponse.setEmail(jwtTokenProvider.getEmail(token));
         dataResponse.setName(jwtTokenProvider.getName(token));
         dataResponse.setPoint(jwtTokenProvider.getPoint(token));
-        return dataResponse;
+        return ResponseUtil.build(ConstantApp.KEY_FOUND, dataResponse, HttpStatus.OK);
     }
 }
