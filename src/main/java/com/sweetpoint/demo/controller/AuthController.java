@@ -28,6 +28,6 @@ public class AuthController {
 
     @GetMapping(value = "/info")
     public ResponseEntity<?> generateData(HttpServletRequest request){
-        return ResponseEntity.ok(authService.generateData(request));
+        return authService.generateData(request);
     }
 }
