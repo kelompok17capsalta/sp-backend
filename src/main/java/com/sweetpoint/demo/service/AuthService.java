@@ -45,6 +45,26 @@ public class AuthService {
             return ResponseUtil.build(ConstantApp.EMAIL_REGISTERED, null, HttpStatus.BAD_REQUEST);
         }
 
+        if (req.getRole().equals("Admin")) {
+            UserDao userDao = new UserDao();
+            userDao.setEmail(req.getEmail());
+            userDao.setUsername(req.getUsername());
+            userDao.setPassword(passwordEncoder.encode(req.getPassword()));
+            userDao.setName(req.getName());
+            userDao.setPoint(0);
+            userDao.setRole("Admin");
+
+            userRepository.save(userDao);
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+                    .id(userDao.getId())
+                    .email(userDao.getEmail())
+                    .username(userDao.getUsername())
+                    .name(userDao.getName())
+                    .point(userDao.getPoint())
+                    .role(userDao.getRole())
+                    .build(), HttpStatus.OK);
+        }
+
         if (req.getRole() == null || req.getRole().equals("User") || !req.getRole().equals("User")) {
             UserDao userDao = new UserDao();
             userDao.setEmail(req.getEmail());
