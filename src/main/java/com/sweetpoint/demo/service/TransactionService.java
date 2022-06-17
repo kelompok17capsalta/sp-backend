@@ -46,9 +46,13 @@ public class TransactionService {
                     .transactionName(transactionDto.getTransactionName())
                     .value(transactionDto.getValue())
                     .build();
-            transactionRepository.save(transactionDao);
+            transactionDao = transactionRepository.save(transactionDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, null, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, TransactionDto.builder()
+                    .id(transactionDao.getId())
+                    .transactionName(transactionDao.getTransactionName())
+                    .value(transactionDao.getValue())
+                    .build(), HttpStatus.OK);
         } catch (Exception e){
             log.error("Get an error create new transaction, Error: {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR);

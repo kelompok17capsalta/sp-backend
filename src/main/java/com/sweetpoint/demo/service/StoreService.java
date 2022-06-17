@@ -69,9 +69,13 @@ public class StoreService {
                     .storeName(storeDto.getStoreName())
                     .description(storeDto.getDescription())
                     .build();
-            storeRepository.save(storeDao);
+            storeDao = storeRepository.save(storeDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, null, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.KEY_FOUND, StoreDto.builder()
+                    .id(storeDao.getId())
+                    .storeName(storeDao.getStoreName())
+                    .description(storeDao.getDescription())
+                    .build(), HttpStatus.OK);
         } catch (Exception e){
             log.error("Get an error create new store, Error: {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR);
