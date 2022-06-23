@@ -36,7 +36,7 @@ public class TransactionService {
                     .build(), HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting transaction by id, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -55,7 +55,7 @@ public class TransactionService {
                     .build(), HttpStatus.OK);
         } catch (Exception e){
             log.error("Get an error create new transaction, Error: {}", e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,7 +80,7 @@ public class TransactionService {
 
         }catch (Exception e){
             log.error("Got an error when updating transaction's detail, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -97,7 +97,7 @@ public class TransactionService {
 
         }catch (Exception e){
             log.error("Got an error when deleting transaction, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

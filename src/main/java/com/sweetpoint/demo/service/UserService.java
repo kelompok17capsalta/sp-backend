@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,13 +44,15 @@ public class UserService implements UserDetailsService {
                         .id(userDao.getId())
                         .email(userDao.getEmail())
                         .name(userDao.getName())
+                        .address(userDao.getAddress())
+                        .phone(userDao.getPhone())
                         .build());
             }
 
             return ResponseUtil.build(ConstantApp.KEY_FOUND, userDtoList, HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting all user's information, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -69,10 +70,12 @@ public class UserService implements UserDetailsService {
                     .id(userDao.getId())
                     .email(userDao.getEmail())
                     .name(userDao.getName())
+                    .address(userDao.getAddress())
+                    .phone(userDao.getPhone())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting user by id, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,25 +83,39 @@ public class UserService implements UserDetailsService {
         try {
             log.info("Updating user with id : {}",id);
             Optional<UserDao> userDaoOptional = userRepository.findById(id);
+
             if (userDaoOptional.isEmpty()){
                 log.info("User not found");
                 return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
+
+            if (userRepository.existsByUsername(request.getUsername())) {
+                return ResponseUtil.build(ConstantApp.USERNAME_REGISTERED, null, HttpStatus.BAD_REQUEST);
+            }
+
+            if (userRepository.existsByEmail(request.getEmail())) {
+                return ResponseUtil.build(ConstantApp.EMAIL_REGISTERED, null, HttpStatus.BAD_REQUEST);
+            }
+
             UserDao userDao = userDaoOptional.get();
             userDao.setEmail(request.getEmail());
             userDao.setUsername(request.getUsername());
             userDao.setName(request.getName());
+            userDao.setAddress(request.getAddress());
+            userDao.setPhone(request.getPhone());
             userRepository.save(userDao);
 
             return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
                     .id(userDao.getId())
                     .email(userDao.getEmail())
                     .name(userDao.getName())
+                    .address(userDao.getAddress())
+                    .phone(userDao.getPhone())
                     .build(),HttpStatus.OK);
 
         }catch (Exception e){
             log.error("Got an error when updating user's information,Error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -115,7 +132,7 @@ public class UserService implements UserDetailsService {
 
         }catch (Exception e){
             log.error("Got an error when deleting user, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

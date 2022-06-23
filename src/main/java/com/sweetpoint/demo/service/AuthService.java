@@ -36,12 +36,10 @@ public class AuthService {
     public ResponseEntity<Object> register(UserDto req) {
 
         if (userRepository.existsByUsername(req.getUsername())) {
-            log.error("Username is already registered");
             return ResponseUtil.build(ConstantApp.USERNAME_REGISTERED, null, HttpStatus.BAD_REQUEST);
         }
 
         if (userRepository.existsByEmail(req.getEmail())) {
-            log.error("Email is already registered");
             return ResponseUtil.build(ConstantApp.EMAIL_REGISTERED, null, HttpStatus.BAD_REQUEST);
         }
 
@@ -51,6 +49,8 @@ public class AuthService {
             userDao.setUsername(req.getUsername());
             userDao.setPassword(passwordEncoder.encode(req.getPassword()));
             userDao.setName(req.getName());
+            userDao.setAddress(req.getAddress());
+            userDao.setPhone(req.getPhone());
             userDao.setPoint(0);
             userDao.setRole("User");
 
@@ -60,6 +60,8 @@ public class AuthService {
                     .email(userDao.getEmail())
                     .username(userDao.getUsername())
                     .name(userDao.getName())
+                    .address(userDao.getAddress())
+                    .phone(userDao.getPhone())
                     .point(userDao.getPoint())
                     .role(userDao.getRole())
                     .build(), HttpStatus.OK);
@@ -94,9 +96,14 @@ public class AuthService {
         String token = bearerToken.substring(7);
 
         DataResponse dataResponse = new DataResponse();
+
+        dataResponse.setId(jwtTokenProvider.getId(token));
         dataResponse.setEmail(jwtTokenProvider.getEmail(token));
         dataResponse.setName(jwtTokenProvider.getName(token));
+        dataResponse.setAddress(jwtTokenProvider.getAddress(token));
+        dataResponse.setPhone(jwtTokenProvider.getPhone(token));
         dataResponse.setPoint(jwtTokenProvider.getPoint(token));
+
         return ResponseUtil.build(ConstantApp.KEY_FOUND, dataResponse, HttpStatus.OK);
     }
 }

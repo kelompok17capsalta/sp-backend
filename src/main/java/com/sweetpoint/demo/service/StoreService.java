@@ -38,7 +38,7 @@ public class StoreService {
             return ResponseUtil.build(ConstantApp.KEY_FOUND, storeDtoList, HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting all store's information, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,7 +59,7 @@ public class StoreService {
                     .build(), HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting store by id, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,7 +78,7 @@ public class StoreService {
                     .build(), HttpStatus.OK);
         } catch (Exception e){
             log.error("Get an error create new store, Error: {}", e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -103,7 +103,7 @@ public class StoreService {
 
         }catch (Exception e){
             log.error("Got an error when updating store's information, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -120,7 +120,7 @@ public class StoreService {
 
         }catch (Exception e){
             log.error("Got an error when deleting store, error : {}",e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
