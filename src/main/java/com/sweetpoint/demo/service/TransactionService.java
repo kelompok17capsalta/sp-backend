@@ -25,11 +25,11 @@ public class TransactionService {
             Optional<TransactionDao> transactionDaoOptional = transactionRepository.findById(id);
 
             if (transactionDaoOptional.isEmpty()){
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
             }
             TransactionDao transactionDao = transactionDaoOptional.get();
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, TransactionDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
                     .id(transactionDao.getId())
                     .transactionName(transactionDao.getTransactionName())
                     .value(transactionDao.getValue())
@@ -48,7 +48,7 @@ public class TransactionService {
                     .build();
             transactionDao = transactionRepository.save(transactionDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, TransactionDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
                     .id(transactionDao.getId())
                     .transactionName(transactionDao.getTransactionName())
                     .value(transactionDao.getValue())
@@ -65,14 +65,14 @@ public class TransactionService {
             Optional<TransactionDao> transactionDaoOptional = transactionRepository.findById(id);
             if (transactionDaoOptional.isEmpty()){
                 log.info("Transaction not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             TransactionDao transactionDao = transactionDaoOptional.get();
             transactionDao.setTransactionName(request.getTransactionName());
             transactionDao.setValue(request.getValue());
             transactionRepository.save(transactionDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, TransactionDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
                     .id(transactionDao.getId())
                     .transactionName(transactionDao.getTransactionName())
                     .value(transactionDao.getValue())
@@ -90,10 +90,10 @@ public class TransactionService {
             Optional<TransactionDao> transactionDaoOptional = transactionRepository.findById(id);
             if (transactionDaoOptional.isEmpty()){
                 log.info("Transaction not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             transactionRepository.delete(transactionDaoOptional.get());
-            return ResponseUtil.build(ConstantApp.KEY_FOUND,null,HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS,null,HttpStatus.OK);
 
         }catch (Exception e){
             log.error("Got an error when deleting transaction, error : {}",e.getMessage());

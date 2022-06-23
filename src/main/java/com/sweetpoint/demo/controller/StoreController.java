@@ -3,7 +3,6 @@ package com.sweetpoint.demo.controller;
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.UserDao;
 import com.sweetpoint.demo.domain.dto.StoreDto;
-import com.sweetpoint.demo.domain.dto.UserDto;
 import com.sweetpoint.demo.service.StoreService;
 
 import com.sweetpoint.demo.service.UserService;
