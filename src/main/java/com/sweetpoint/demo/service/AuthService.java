@@ -99,6 +99,7 @@ public class AuthService {
 
         dataResponse.setId(jwtTokenProvider.getId(token));
         dataResponse.setEmail(jwtTokenProvider.getEmail(token));
+        dataResponse.setUsername(jwtTokenProvider.getUsername(token));
         dataResponse.setName(jwtTokenProvider.getName(token));
         dataResponse.setAddress(jwtTokenProvider.getAddress(token));
         dataResponse.setPhone(jwtTokenProvider.getPhone(token));
