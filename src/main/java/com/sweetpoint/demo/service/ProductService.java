@@ -39,7 +39,7 @@ public class ProductService {
                         .build());
             }
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, productDtoList, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS, productDtoList, HttpStatus.OK);
         }catch (Exception e) {
             log.error("Got an error when getting all product's information, error : {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -54,11 +54,11 @@ public class ProductService {
 
 
             if (productDaoOptional.isEmpty()){
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
             }
             ProductDao productDao = productDaoOptional.get();
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, ProductDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
                     .id(productDao.getId())
                     .productName(productDao.getProductName())
                     .denom(productDao.getDenom())
@@ -85,7 +85,7 @@ public class ProductService {
                     .build();
             productDao = productRepository.save(productDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, ProductDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
                     .id(productDao.getId())
                     .productName(productDao.getProductName())
                     .denom(productDao.getDenom())
@@ -106,7 +106,7 @@ public class ProductService {
             Optional<ProductDao> productDaoOptional = productRepository.findById(id);
             if (productDaoOptional.isEmpty()) {
                 log.info("Product not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
             }
 
             ProductDao productDao = productDaoOptional.get();
@@ -118,7 +118,7 @@ public class ProductService {
             productDao.setStock(request.getStock());
             productRepository.save(productDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, ProductDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
                     .id(productDao.getId())
                     .productName(productDao.getProductName())
                     .denom(productDao.getDenom())
@@ -140,11 +140,11 @@ public class ProductService {
             Optional<ProductDao> productDaoOptional = productRepository.findById(id);
             if (productDaoOptional.isEmpty()) {
                 log.info("Product not found!");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
             }
 
             productRepository.delete(productDaoOptional.get());
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, null, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS, null, HttpStatus.OK);
 
         }catch (Exception e) {
             log.error("Got an error deleting product, error : {}", e.getMessage());

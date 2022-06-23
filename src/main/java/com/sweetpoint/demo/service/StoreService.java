@@ -35,7 +35,7 @@ public class StoreService {
                         .build());
             }
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, storeDtoList, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS, storeDtoList, HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting all store's information, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -48,11 +48,11 @@ public class StoreService {
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
 
             if (storeDaoOptional.isEmpty()){
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
             }
             StoreDao storeDao = storeDaoOptional.get();
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, StoreDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, StoreDto.builder()
                     .id(storeDao.getId())
                     .storeName(storeDao.getStoreName())
                     .description(storeDao.getDescription())
@@ -71,7 +71,7 @@ public class StoreService {
                     .build();
             storeDao = storeRepository.save(storeDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, StoreDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, StoreDto.builder()
                     .id(storeDao.getId())
                     .storeName(storeDao.getStoreName())
                     .description(storeDao.getDescription())
@@ -88,14 +88,14 @@ public class StoreService {
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
             if (storeDaoOptional.isEmpty()){
                 log.info("Store not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             StoreDao storeDao = storeDaoOptional.get();
             storeDao.setStoreName(request.getStoreName());
             storeDao.setDescription(request.getDescription());
             storeRepository.save(storeDao);
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, StoreDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, StoreDto.builder()
                     .id(storeDao.getId())
                     .storeName(storeDao.getStoreName())
                     .description(storeDao.getDescription())
@@ -113,10 +113,10 @@ public class StoreService {
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
             if (storeDaoOptional.isEmpty()){
                 log.info("Store not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             storeRepository.delete(storeDaoOptional.get());
-            return ResponseUtil.build(ConstantApp.KEY_FOUND,null,HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS,null,HttpStatus.OK);
 
         }catch (Exception e){
             log.error("Got an error when deleting store, error : {}",e.getMessage());

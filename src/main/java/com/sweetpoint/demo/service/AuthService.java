@@ -55,7 +55,7 @@ public class AuthService {
             userDao.setRole("User");
 
             userRepository.save(userDao);
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+            return ResponseUtil.build("User berhasil terdaftar!", UserDto.builder()
                     .id(userDao.getId())
                     .email(userDao.getEmail())
                     .username(userDao.getUsername())
@@ -64,7 +64,7 @@ public class AuthService {
                     .phone(userDao.getPhone())
                     .point(userDao.getPoint())
                     .role(userDao.getRole())
-                    .build(), HttpStatus.OK);
+                    .build(), HttpStatus.CREATED);
         }
 
         return null;
@@ -80,14 +80,14 @@ public class AuthService {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtTokenProvider.generationToken(authentication);
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, TokenResponse.builder().token(jwt).build(),
+            return ResponseUtil.build("Login berhasil!", TokenResponse.builder().token(jwt).build(),
                     HttpStatus.OK);
         } catch (BadCredentialsException e){
             log.error("Bad Credential", e.getMessage());
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null, HttpStatus.BAD_REQUEST);
+            return ResponseUtil.build("Login tidak valid!",null, HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             log.error(e.getMessage(), e);
-            return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.ERROR,null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -105,6 +105,6 @@ public class AuthService {
         dataResponse.setPhone(jwtTokenProvider.getPhone(token));
         dataResponse.setPoint(jwtTokenProvider.getPoint(token));
 
-        return ResponseUtil.build(ConstantApp.KEY_FOUND, dataResponse, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.SUCCESS, dataResponse, HttpStatus.OK);
     }
 }

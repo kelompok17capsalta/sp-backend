@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
                         .build());
             }
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, userDtoList, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS, userDtoList, HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting all user's information, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -63,11 +63,11 @@ public class UserService implements UserDetailsService {
             Optional<UserDao> userDaoOptional = userRepository.findById(id);
 
             if (userDaoOptional.isEmpty()){
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
             }
             UserDao userDao = userDaoOptional.get();
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
+            return ResponseUtil.build(ConstantApp.SUCCESS, UserDto.builder()
                     .id(userDao.getId())
                     .email(userDao.getEmail())
                     .username(userDao.getUsername())
@@ -88,36 +88,48 @@ public class UserService implements UserDetailsService {
 
             if (userDaoOptional.isEmpty()){
                 log.info("User not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
 
-            if (userRepository.existsByUsername(request.getUsername())) {
-                return ResponseUtil.build(ConstantApp.USERNAME_REGISTERED, null, HttpStatus.BAD_REQUEST);
+            if (!Objects.equals(request.getEmail(), "") && request.getEmail() != null) {
+                if (userRepository.existsByEmail(request.getEmail())) {
+                    return ResponseUtil.build(ConstantApp.EMAIL_REGISTERED, null, HttpStatus.BAD_REQUEST);
+                }
+                userDaoOptional.get().setEmail(request.getEmail());
             }
 
-            if (userRepository.existsByEmail(request.getEmail())) {
-                return ResponseUtil.build(ConstantApp.EMAIL_REGISTERED, null, HttpStatus.BAD_REQUEST);
+            if (!Objects.equals(request.getUsername(), "") && request.getUsername() != null) {
+                if (userRepository.existsByUsername(request.getUsername())) {
+                    return ResponseUtil.build(ConstantApp.USERNAME_REGISTERED, null, HttpStatus.BAD_REQUEST);
+                }
+                userDaoOptional.get().setUsername(request.getUsername());
             }
 
-            UserDao userDao = userDaoOptional.get();
-            userDao.setEmail(request.getEmail());
-            userDao.setUsername(request.getUsername());
-            userDao.setName(request.getName());
-            userDao.setAddress(request.getAddress());
-            userDao.setPhone(request.getPhone());
-            userRepository.save(userDao);
+            if (!Objects.equals(request.getName(), "") && request.getName() != null) {
+                userDaoOptional.get().setName(request.getName());
+            }
 
-            return ResponseUtil.build(ConstantApp.KEY_FOUND, UserDto.builder()
-                    .id(userDao.getId())
-                    .email(userDao.getEmail())
-                    .username(userDao.getUsername())
-                    .name(userDao.getName())
-                    .address(userDao.getAddress())
-                    .phone(userDao.getPhone())
-                    .build(),HttpStatus.OK);
+            if (!Objects.equals(request.getAddress(), "") && request.getAddress() != null) {
+                userDaoOptional.get().setAddress(request.getAddress());
+            }
+
+            if (!Objects.equals(request.getPhone(), "") && request.getPhone() != null) {
+                userDaoOptional.get().setPhone(request.getPhone());
+            }
+
+            userRepository.save(userDaoOptional.get());
+
+            return ResponseUtil.build(ConstantApp.DATA_UPDATED, UserDto.builder()
+                    .id(userDaoOptional.get().getId())
+                    .email(userDaoOptional.get().getEmail())
+                    .username(userDaoOptional.get().getUsername())
+                    .name(userDaoOptional.get().getName())
+                    .address(userDaoOptional.get().getAddress())
+                    .phone(userDaoOptional.get().getPhone())
+                    .build(), HttpStatus.OK);
 
         }catch (Exception e){
-            log.error("Got an error when updating user's information,Error : {}",e.getMessage());
+            log.error("Got an error when updating user's information, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -128,15 +140,14 @@ public class UserService implements UserDetailsService {
             Optional<UserDao> userDaoOptional = userRepository.findById(id);
             if (userDaoOptional.isEmpty()){
                 log.info("User not found");
-                return ResponseUtil.build(ConstantApp.KEY_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
+                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             userRepository.delete(userDaoOptional.get());
-            return ResponseUtil.build(ConstantApp.KEY_FOUND,null,HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.DATA_DELETED,null,HttpStatus.OK);
 
         }catch (Exception e){
             log.error("Got an error when deleting user, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
