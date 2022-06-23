@@ -16,7 +16,10 @@ public class DataResponse implements Serializable {
 
     private static final long serialVersionUID = -8129725340647017694L;
 
+    private Long id;
     private String email;
     private String name;
+    private String address;
+    private String phone;
     private Integer point;
 }

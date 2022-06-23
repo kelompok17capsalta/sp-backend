@@ -42,6 +42,12 @@ public class UserDao extends BaseDao implements UserDetails, Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "point")
     private Integer point;
 

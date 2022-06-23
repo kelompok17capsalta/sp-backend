@@ -29,9 +29,12 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() * expiration);
 
         Map<String,Object> claims = new HashMap<>();
+        claims.put("id", userDao.getId());
         claims.put("username", userDao.getUsername());
         claims.put("email", userDao.getEmail());
         claims.put("name", userDao.getName());
+        claims.put("address", userDao.getAddress());
+        claims.put("phone", userDao.getPhone());
         claims.put("point", userDao.getPoint());
 
         return Jwts.builder()
@@ -67,6 +70,11 @@ public class JwtTokenProvider {
         return claims.get("username").toString();
     }
 
+    public Long getId(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Long.valueOf(claims.get("id").toString());
+    }
+
     public String getEmail(String token){
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.get("email").toString();
@@ -75,6 +83,16 @@ public class JwtTokenProvider {
     public String getName(String token){
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.get("name").toString();
+    }
+
+    public String getAddress(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("address").toString();
+    }
+
+    public String getPhone(String token){
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("phone").toString();
     }
 
     public Integer getPoint(String token){
