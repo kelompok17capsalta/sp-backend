@@ -53,6 +53,7 @@ public class UserService implements UserDetailsService {
                         .name(userDao.getName())
                         .address(userDao.getAddress())
                         .phone(userDao.getPhone())
+                        .point(userDao.getPoint())
                         .build());
             }
 
@@ -80,6 +81,7 @@ public class UserService implements UserDetailsService {
                     .name(userDao.getName())
                     .address(userDao.getAddress())
                     .phone(userDao.getPhone())
+                    .point(userDao.getPoint())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting user by id, error : {}",e.getMessage());

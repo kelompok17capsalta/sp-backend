@@ -110,6 +110,7 @@ public class AuthService {
                 .name(userDao.getName())
                 .address(userDao.getAddress())
                 .phone(userDao.getPhone())
+                .point(userDao.getPoint())
                 .build(), HttpStatus.OK);
     }
 }
