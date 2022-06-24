@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
 @Slf4j
@@ -84,7 +85,7 @@ public class AuthService {
                     HttpStatus.OK);
         } catch (BadCredentialsException e){
             log.error("Bad Credential", e.getMessage());
-            return ResponseUtil.build("Login tidak valid!",null, HttpStatus.BAD_REQUEST);
+            return ResponseUtil.build("Username atau password salah!",null, HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             log.error(e.getMessage(), e);
             return ResponseUtil.build(ConstantApp.ERROR,null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,16 +96,20 @@ public class AuthService {
         String bearerToken = request.getHeader("Authorization");
         String token = bearerToken.substring(7);
 
-        DataResponse dataResponse = new DataResponse();
+        Optional<UserDao> userDaoOptional = userRepository.findById(jwtTokenProvider.getId(token));
 
-        dataResponse.setId(jwtTokenProvider.getId(token));
-        dataResponse.setEmail(jwtTokenProvider.getEmail(token));
-        dataResponse.setUsername(jwtTokenProvider.getUsername(token));
-        dataResponse.setName(jwtTokenProvider.getName(token));
-        dataResponse.setAddress(jwtTokenProvider.getAddress(token));
-        dataResponse.setPhone(jwtTokenProvider.getPhone(token));
-        dataResponse.setPoint(jwtTokenProvider.getPoint(token));
+        if (userDaoOptional.isEmpty()){
+            return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null ,HttpStatus.BAD_REQUEST);
+        }
+        UserDao userDao = userDaoOptional.get();
 
-        return ResponseUtil.build(ConstantApp.SUCCESS, dataResponse, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.SUCCESS, UserDto.builder()
+                .id(userDao.getId())
+                .email(userDao.getEmail())
+                .username(userDao.getUsername())
+                .name(userDao.getName())
+                .address(userDao.getAddress())
+                .phone(userDao.getPhone())
+                .build(), HttpStatus.OK);
     }
 }
