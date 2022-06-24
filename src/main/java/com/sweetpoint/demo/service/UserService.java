@@ -7,11 +7,13 @@ import com.sweetpoint.demo.repository.UserRepository;
 import com.sweetpoint.demo.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +23,10 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+
+    @Lazy
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -103,6 +109,10 @@ public class UserService implements UserDetailsService {
                     return ResponseUtil.build(ConstantApp.USERNAME_REGISTERED, null, HttpStatus.BAD_REQUEST);
                 }
                 userDaoOptional.get().setUsername(request.getUsername());
+            }
+
+            if (!Objects.equals(request.getPassword(), "") && request.getPassword() != null) {
+                userDaoOptional.get().setPassword(passwordEncoder.encode(request.getPassword()));
             }
 
             if (!Objects.equals(request.getName(), "") && request.getName() != null) {
