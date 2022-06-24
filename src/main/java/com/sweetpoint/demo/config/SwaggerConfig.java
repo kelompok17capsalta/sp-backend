@@ -38,7 +38,7 @@ public class SwaggerConfig {
                 "Sweet Point",
                 "1.0",
                 "Terms of service",
-                new Contact("Sweet Point Team", "https://github.com/kelompok17capsalta/sp-backend", "anggisinaga9543@gmail.com"),
+                new Contact("Sweet Point Team", "https://github.com/kelompok17capsalta/sp-backend", "arunaassyahid@gmail.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licenses/LICENSE-2.0",
                 Collections.emptyList());
