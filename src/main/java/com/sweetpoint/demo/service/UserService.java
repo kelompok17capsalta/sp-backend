@@ -46,15 +46,17 @@ public class UserService implements UserDetailsService {
             List<UserDto> userDtoList = new ArrayList<>();
 
             for(UserDao userDao: userDaoList){
-                userDtoList.add(UserDto.builder()
-                        .id(userDao.getId())
-                        .email(userDao.getEmail())
-                        .username(userDao.getUsername())
-                        .name(userDao.getName())
-                        .address(userDao.getAddress())
-                        .phone(userDao.getPhone())
-                        .point(userDao.getPoint())
-                        .build());
+                if(userDao.getRole().equals("User")){
+                    userDtoList.add(UserDto.builder()
+                            .id(userDao.getId())
+                            .email(userDao.getEmail())
+                            .username(userDao.getUsername())
+                            .name(userDao.getName())
+                            .address(userDao.getAddress())
+                            .phone(userDao.getPhone())
+                            .point(userDao.getPoint())
+                            .build());
+                }
             }
 
             return ResponseUtil.build(ConstantApp.SUCCESS, userDtoList, HttpStatus.OK);
