@@ -26,4 +26,5 @@ public class StoreDto implements Serializable {
     private Long id;
     private String storeName;
     private String description;
+    private Integer points;
 }

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class StoreController {
             return storeService.createNewStore(store);
         }
 
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @PutMapping("/{id}")
@@ -52,7 +53,7 @@ public class StoreController {
         if (user.getRole().equals("Admin")){
             return storeService.updateStore(id, store);
         }
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{id}")
@@ -61,6 +62,11 @@ public class StoreController {
         if (user.getRole().equals("Admin")){
             return storeService.deleteStore(id);
         }
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("/purchase/{id}")
+    public ResponseEntity<Object> purchase(@PathVariable Long id, HttpServletRequest request) {
+        return storeService.purchaseProduct(id, request);
     }
 }

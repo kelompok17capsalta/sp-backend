@@ -1,6 +1,5 @@
 package com.sweetpoint.demo.service;
 
-import com.sweetpoint.demo.domain.dto.DataResponse;
 import com.sweetpoint.demo.security.JwtTokenProvider;
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.UserDao;
