@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Slf4j
@@ -42,7 +43,7 @@ public class ProductController {
         if (user.getRole().equals("Admin")) {
             return productService.createNewProduct(product);
         }
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @PutMapping("/{id}")
@@ -52,7 +53,7 @@ public class ProductController {
         if (user.getRole().equals("Admin")) {
             return productService.updateProduct(id, product);
         }
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{id}")
@@ -61,6 +62,11 @@ public class ProductController {
         if (user.getRole().equals("Admin")) {
             return productService.deleteProduct(id);
         }
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
+    }
+
+    @PostMapping("/redeem/{id}")
+    public ResponseEntity<Object> redeem(@PathVariable Long id, HttpServletRequest request) {
+        return productService.redeemProduct(id, request);
     }
 }

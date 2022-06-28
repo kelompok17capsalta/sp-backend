@@ -44,4 +44,7 @@ public class ProductDao extends BaseDao implements Serializable {
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
+
+    @Column(name = "image")
+    private String image;
 }
