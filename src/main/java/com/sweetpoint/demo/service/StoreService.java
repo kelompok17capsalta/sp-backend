@@ -37,7 +37,7 @@ public class StoreService {
 
     public ResponseEntity<Object> getAllStore(){
         try{
-            log.info("Getting all store's information");
+            log.info("Getting all store product's information");
             List<StoreDao> storeDaoList = storeRepository.findAll();
             List<StoreDto> storeDtoList = new ArrayList<>();
 
@@ -59,7 +59,7 @@ public class StoreService {
 
     public ResponseEntity<Object> getStoreById(Long id){
         try{
-            log.info("Getting store by id,id : {}",id);
+            log.info("Getting store product by id,id : {}",id);
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
 
             if (storeDaoOptional.isEmpty()){
@@ -74,7 +74,7 @@ public class StoreService {
                     .points(storeDao.getPoints())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
-            log.error("Got an error when getting store by id, error : {}",e.getMessage());
+            log.error("Got an error when getting store product by id, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -108,7 +108,7 @@ public class StoreService {
             log.info("Updating store product with id : {}",id);
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
             if (storeDaoOptional.isEmpty()){
-                log.info("Store not found");
+                log.info("Store product not found");
                 return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
 
@@ -134,31 +134,31 @@ public class StoreService {
                     .build(),HttpStatus.OK);
 
         }catch (Exception e){
-            log.error("Got an error when updating store's information, error : {}",e.getMessage());
+            log.error("Got an error when updating store product's information, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public ResponseEntity<Object> deleteStore(Long id){
         try {
-            log.info("Deleting store with id : {}",id);
+            log.info("Deleting store product with id : {}",id);
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
             if (storeDaoOptional.isEmpty()){
-                log.info("Store not found");
+                log.info("Store product not found");
                 return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND,null,HttpStatus.BAD_REQUEST);
             }
             storeRepository.delete(storeDaoOptional.get());
             return ResponseUtil.build(ConstantApp.SUCCESS,null,HttpStatus.OK);
 
         }catch (Exception e){
-            log.error("Got an error when deleting store, error : {}",e.getMessage());
+            log.error("Got an error when deleting store product, error : {}",e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public ResponseEntity<Object> purchaseProduct(Long id, HttpServletRequest request){
         try {
-            log.info("Purchasing product, id : {}", id);
+            log.info("Purchasing store product, id : {}", id);
             Optional<StoreDao> storeDaoOptional = storeRepository.findById(id);
 
             if (storeDaoOptional.isEmpty()){
@@ -181,7 +181,7 @@ public class StoreService {
                     .point(userDao.getPoint())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
-            log.error("Got an error when purchasing product by id, error : {}", e.getMessage());
+            log.error("Got an error when purchasing store product by id, error : {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
