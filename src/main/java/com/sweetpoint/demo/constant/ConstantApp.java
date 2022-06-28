@@ -9,4 +9,7 @@ public class ConstantApp {
     public static final String USERNAME_REGISTERED  = "Username telah terdaftar!";
     public static final String EMAIL_REGISTERED  = "Email telah terdaftar!";
     public static final String NOT_AUTHORIZED = "Anda tidak memiliki izin!";
+    public static final String INSUFFICIENT_POINT = "Poin anda tidak mencukupi!";
+    public static final String PURCHASE_COMPLETED = "Pembelian berhasil!";
+    public static final String INVALID_DATA = "Data yang dimasukkan tidak valid!";
 }

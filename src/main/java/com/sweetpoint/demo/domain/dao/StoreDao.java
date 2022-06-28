@@ -32,4 +32,7 @@ public class StoreDao extends BaseDao implements Serializable {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "points", nullable = false)
+    private Integer points;
 }

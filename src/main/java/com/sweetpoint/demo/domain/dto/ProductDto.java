@@ -29,4 +29,5 @@ public class ProductDto implements Serializable {
     private String descriptions;
     private Integer points;
     private Integer stock;
+    private String image;
 }

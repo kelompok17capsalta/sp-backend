@@ -36,7 +36,7 @@ public class TransactionController {
             return transactionService.createNewTransaction(transaction);
         }
 
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @PutMapping("/{id}")
@@ -46,7 +46,7 @@ public class TransactionController {
             return transactionService.updateTransaction(id, transaction);
         }
 
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{id}")
@@ -56,6 +56,6 @@ public class TransactionController {
             return transactionService.deleteTransaction(id);
         }
 
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.OK);
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 }
