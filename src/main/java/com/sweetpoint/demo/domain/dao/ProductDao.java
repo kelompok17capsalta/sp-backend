@@ -33,8 +33,8 @@ public class ProductDao extends BaseDao implements Serializable {
     @Column(name = "denom", nullable = false)
     private Integer denom;
 
-    @Column(name = "provider", nullable = false)
-    private String provider;
+    @Column(name = "category", nullable = false)
+    private String category;
 
     @Column(name = "descriptions", nullable = false)
     private String descriptions;
@@ -45,6 +45,6 @@ public class ProductDao extends BaseDao implements Serializable {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = false)
     private String image;
 }

@@ -45,7 +45,7 @@ public class ProductService {
                         .id(productDao.getId())
                         .productName(productDao.getProductName())
                         .denom(productDao.getDenom())
-                        .provider(productDao.getProvider())
+                        .category(productDao.getCategory())
                         .descriptions(productDao.getDescriptions())
                         .points(productDao.getPoints())
                         .stock(productDao.getStock())
@@ -75,7 +75,7 @@ public class ProductService {
                     .id(productDao.getId())
                     .productName(productDao.getProductName())
                     .denom(productDao.getDenom())
-                    .provider(productDao.getProvider())
+                    .category(productDao.getCategory())
                     .descriptions(productDao.getDescriptions())
                     .points(productDao.getPoints())
                     .stock(productDao.getStock())
@@ -89,28 +89,102 @@ public class ProductService {
 
     public ResponseEntity<Object> createNewProduct(ProductDto productDto) {
         try {
-            if(!Objects.equals(productDto.getStock(), 0)){
-                ProductDao productDao = ProductDao.builder()
-                        .productName(productDto.getProductName())
-                        .denom(productDto.getDenom())
-                        .provider(productDto.getProvider())
-                        .descriptions(productDto.getDescriptions())
-                        .points(productDto.getPoints())
-                        .stock(productDto.getStock())
-                        .image(productDto.getImage())
-                        .build();
-                productDao = productRepository.save(productDao);
+            if(productDto.getStock() > 0){
+                if(productDto.getCategory().equals("Cash Out")){
+                    ProductDao productDao = ProductDao.builder()
+                            .productName(productDto.getProductName())
+                            .denom(productDto.getDenom())
+                            .category("Cash Out")
+                            .descriptions(productDto.getDescriptions())
+                            .points(productDto.getPoints())
+                            .stock(productDto.getStock())
+                            .image(productDto.getImage())
+                            .build();
+                    productDao = productRepository.save(productDao);
 
-                return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
-                        .id(productDao.getId())
-                        .productName(productDao.getProductName())
-                        .denom(productDao.getDenom())
-                        .provider(productDao.getProvider())
-                        .descriptions(productDao.getDescriptions())
-                        .points(productDao.getPoints())
-                        .stock(productDao.getStock())
-                        .image(productDao.getImage())
-                        .build(), HttpStatus.OK);
+                    return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build(), HttpStatus.OK);
+                }
+
+                if(productDto.getCategory().equals("E-Money")){
+                    ProductDao productDao = ProductDao.builder()
+                            .productName(productDto.getProductName())
+                            .denom(productDto.getDenom())
+                            .category("E-Money")
+                            .descriptions(productDto.getDescriptions())
+                            .points(productDto.getPoints())
+                            .stock(productDto.getStock())
+                            .image(productDto.getImage())
+                            .build();
+                    productDao = productRepository.save(productDao);
+
+                    return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build(), HttpStatus.OK);
+                }
+
+                if(productDto.getCategory().equals("Pulsa")){
+                    ProductDao productDao = ProductDao.builder()
+                            .productName(productDto.getProductName())
+                            .denom(productDto.getDenom())
+                            .category("Pulsa")
+                            .descriptions(productDto.getDescriptions())
+                            .points(productDto.getPoints())
+                            .stock(productDto.getStock())
+                            .image(productDto.getImage())
+                            .build();
+                    productDao = productRepository.save(productDao);
+
+                    return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build(), HttpStatus.OK);
+                }
+
+                if(productDto.getCategory().equals("Paket Data")){
+                    ProductDao productDao = ProductDao.builder()
+                            .productName(productDto.getProductName())
+                            .denom(productDto.getDenom())
+                            .category("Paket Data")
+                            .descriptions(productDto.getDescriptions())
+                            .points(productDto.getPoints())
+                            .stock(productDto.getStock())
+                            .image(productDto.getImage())
+                            .build();
+                    productDao = productRepository.save(productDao);
+
+                    return ResponseUtil.build(ConstantApp.SUCCESS, ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build(), HttpStatus.OK);
+                }
             }
             return ResponseUtil.build(ConstantApp.INVALID_DATA, null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e){
@@ -132,24 +206,46 @@ public class ProductService {
                 productDaoOptional.get().setProductName(request.getProductName());
             }
 
-            if (!Objects.equals(request.getDenom(), "") || !Objects.equals(request.getDenom(), 0) && request.getDenom() != null) {
-                productDaoOptional.get().setDenom(request.getDenom());
+            if (!Objects.equals(request.getDenom(), "") && request.getDenom() != null) {
+                if(request.getDenom() > 0){
+                    productDaoOptional.get().setDenom(request.getDenom());
+                }else{
+                    return ResponseUtil.build("Denom tidak boleh 0!", null, HttpStatus.BAD_REQUEST);
+                }
             }
 
-            if (!Objects.equals(request.getProvider(), "") && request.getProvider() != null) {
-                productDaoOptional.get().setProvider(request.getProvider());
+            if (!Objects.equals(request.getCategory(), "") && request.getCategory() != null) {
+                if(request.getCategory().equals("Cash Out")){
+                    productDaoOptional.get().setCategory("Cash Out");
+                }else if(request.getCategory().equals("E-Money")){
+                    productDaoOptional.get().setCategory("E-Money");
+                }else if(request.getCategory().equals("Pulsa")){
+                    productDaoOptional.get().setCategory("Pulsa");
+                }else if(request.getCategory().equals("Paket Data")){
+                    productDaoOptional.get().setCategory("Paket Data");
+                }else{
+                    return ResponseUtil.build("Masukkan kategori yang valid!", null, HttpStatus.BAD_REQUEST);
+                }
             }
 
             if (!Objects.equals(request.getDescriptions(), "") && request.getDescriptions() != null) {
                 productDaoOptional.get().setDescriptions(request.getDescriptions());
             }
 
-            if (!Objects.equals(request.getPoints(), "") && request.getPoints() != null) {
-                productDaoOptional.get().setPoints(request.getPoints());
+            if (request.getPoints() != null) {
+                if(request.getPoints() > 0){
+                    productDaoOptional.get().setPoints(request.getPoints());
+                }else{
+                    return ResponseUtil.build("Point tidak boleh 0!", null, HttpStatus.BAD_REQUEST);
+                }
             }
 
-            if (!Objects.equals(request.getStock(), "") || !Objects.equals(request.getStock(), 0) && request.getPoints() != null) {
-                productDaoOptional.get().setPoints(request.getPoints());
+            if (request.getStock() != null) {
+                if(request.getStock() > 0){
+                    productDaoOptional.get().setStock(request.getStock());
+                }else{
+                    return ResponseUtil.build("Stok tidak boleh 0!", null, HttpStatus.BAD_REQUEST);
+                }
             }
 
             if (!Objects.equals(request.getImage(), "") && request.getImage() != null) {
@@ -162,7 +258,7 @@ public class ProductService {
                     .id(productDaoOptional.get().getId())
                     .productName(productDaoOptional.get().getProductName())
                     .denom(productDaoOptional.get().getDenom())
-                    .provider(productDaoOptional.get().getProvider())
+                    .category(productDaoOptional.get().getCategory())
                     .descriptions(productDaoOptional.get().getDescriptions())
                     .points(productDaoOptional.get().getPoints())
                     .stock(productDaoOptional.get().getStock())
