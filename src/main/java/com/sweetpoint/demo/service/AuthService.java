@@ -67,7 +67,7 @@ public class AuthService {
                     .build(), HttpStatus.CREATED);
         }
 
-        return null;
+        return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
