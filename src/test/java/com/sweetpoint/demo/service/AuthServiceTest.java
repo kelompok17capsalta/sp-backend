@@ -9,8 +9,8 @@ import java.util.*;
 
 import com.sweetpoint.demo.domain.common.ApiResponse;
 import com.sweetpoint.demo.domain.dao.UserDao;
-import com.sweetpoint.demo.domain.dto.TokenResponse;
-import com.sweetpoint.demo.domain.dto.UserDto;
+import com.sweetpoint.demo.domain.dto.response.TokenResponse;
+import com.sweetpoint.demo.domain.dto.request.UserDto;
 import com.sweetpoint.demo.repository.UserRepository;
 import com.sweetpoint.demo.security.JwtTokenProvider;
 

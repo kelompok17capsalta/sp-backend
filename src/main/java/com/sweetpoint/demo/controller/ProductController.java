@@ -2,7 +2,7 @@ package com.sweetpoint.demo.controller;
 
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.UserDao;
-import com.sweetpoint.demo.domain.dto.ProductDto;
+import com.sweetpoint.demo.domain.dto.request.ProductDto;
 import com.sweetpoint.demo.service.ProductService;
 import com.sweetpoint.demo.service.UserService;
 import com.sweetpoint.demo.util.ResponseUtil;
