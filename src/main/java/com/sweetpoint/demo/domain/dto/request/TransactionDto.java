@@ -1,4 +1,4 @@
-package com.sweetpoint.demo.domain.dto;
+package com.sweetpoint.demo.domain.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -24,6 +25,13 @@ public class TransactionDto implements Serializable {
     private static final long serialVersionUID = -1709214237053597779L;
 
     private Long id;
-    private String transactionName;
-    private Integer value;
+    private LocalDateTime created;
+    private String descriptions;
+    private String status;
+    private Integer points;
+    private Long userId;
+    private String category;
+    private String credentials;
+    private String provider;
+    private Long productId;
 }

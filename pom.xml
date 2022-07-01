@@ -118,6 +118,7 @@
 						<exclude>**/domain/**/*.class</exclude>
 						<exclude>**/repository/*.class</exclude>
 						<exclude>**/security/*.class</exclude>
+						<exclude>**/service/PaymentService.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>
