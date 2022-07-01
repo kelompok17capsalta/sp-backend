@@ -2,7 +2,7 @@ package com.sweetpoint.demo.controller;
 
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.UserDao;
-import com.sweetpoint.demo.domain.dto.TransactionDto;
+import com.sweetpoint.demo.domain.dto.request.TransactionDto;
 import com.sweetpoint.demo.service.TransactionService;
 import com.sweetpoint.demo.service.UserService;
 import com.sweetpoint.demo.util.ResponseUtil;
@@ -23,6 +23,16 @@ public class TransactionController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/")
+    public ResponseEntity<Object> get(){
+        return transactionService.getAllTransaction();
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Object> getUser(@PathVariable Long id){
+        return transactionService.getUserTransaction(id);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable Long id) {

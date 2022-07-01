@@ -1,4 +1,4 @@
-package com.sweetpoint.demo.domain.dto;
+package com.sweetpoint.demo.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

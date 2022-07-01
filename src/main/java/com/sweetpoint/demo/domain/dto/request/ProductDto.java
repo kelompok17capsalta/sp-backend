@@ -1,4 +1,4 @@
-package com.sweetpoint.demo.domain.dto;
+package com.sweetpoint.demo.domain.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,11 +18,16 @@ import java.io.Serializable;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransactionDto implements Serializable {
+public class ProductDto implements Serializable {
 
-    private static final long serialVersionUID = -1709214237053597779L;
+    private static final long serialVersionUID = 7009848690068574311L;
 
     private Long id;
-    private String transactionName;
-    private Integer value;
+    private String productName;
+    private Integer denom;
+    private String category;
+    private String descriptions;
+    private Integer points;
+    private Integer stock;
+    private String image;
 }
