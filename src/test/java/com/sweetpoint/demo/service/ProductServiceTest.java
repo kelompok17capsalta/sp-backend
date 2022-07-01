@@ -9,7 +9,7 @@ import java.util.*;
 
 import com.sweetpoint.demo.domain.common.ApiResponse;
 import com.sweetpoint.demo.domain.dao.ProductDao;
-import com.sweetpoint.demo.domain.dto.ProductDto;
+import com.sweetpoint.demo.domain.dto.request.ProductDto;
 import com.sweetpoint.demo.repository.ProductRepository;
 
 import org.junit.jupiter.api.Tag;
@@ -19,8 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
 @Tag(value = "ProductServiceTest")

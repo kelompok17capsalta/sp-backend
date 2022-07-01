@@ -1,6 +1,6 @@
 package com.sweetpoint.demo.controller;
 
-import com.sweetpoint.demo.domain.dto.UserDto;
+import com.sweetpoint.demo.domain.dto.request.UserDto;
 import com.sweetpoint.demo.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

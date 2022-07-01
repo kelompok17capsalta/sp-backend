@@ -2,7 +2,7 @@ package com.sweetpoint.demo.service;
 
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.UserDao;
-import com.sweetpoint.demo.domain.dto.UserDto;
+import com.sweetpoint.demo.domain.dto.request.UserDto;
 import com.sweetpoint.demo.repository.UserRepository;
 import com.sweetpoint.demo.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
