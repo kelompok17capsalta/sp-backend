@@ -150,7 +150,7 @@ public class TransactionService {
             }
 
             if(transactionDto.getStatus() == null || transactionDto.getStatus().equals("Pending") || !transactionDto.getStatus().equals("Pending")){
-                if(transactionDto.getProduct() == null && transactionDto.getCategory().equals("shopping") && transactionDto.getDenom() == null){
+                if(transactionDto.getProduct() == null && transactionDto.getCategory().equals("shopping")){
                     TransactionDao transactionDao = TransactionDao.builder()
                             .descriptions(transactionDto.getDescriptions())
                             .status("Pending")
@@ -159,6 +159,7 @@ public class TransactionService {
                             .category(transactionDto.getCategory())
                             .credentials(transactionDto.getCredentials())
                             .provider(transactionDto.getProvider())
+                            .denom(transactionDto.getDenom())
                             .build();
 
                     UserDao userDao = userDaoOptional.get();
