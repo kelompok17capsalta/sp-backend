@@ -47,7 +47,6 @@ public class TransactionService {
 
             for (TransactionDao transactionDao: transactionDaoList){
                 Optional<UserDao> userDaoOptional = userRepository.findById(transactionDao.getUser().getId());
-                Optional<ProductDao> productDaoOptional = productRepository.findById(transactionDao.getProduct().getId());
 
                 transactionDtoList.add(TransactionDto.builder()
                         .id(transactionDao.getId())
@@ -61,9 +60,7 @@ public class TransactionService {
                         .category(transactionDao.getCategory())
                         .credentials(transactionDao.getCredentials())
                         .provider(transactionDao.getProvider())
-                        .product(ProductDto.builder()
-                                .denom(productDaoOptional.get().getDenom())
-                                .build())
+                        .denom(transactionDao.getDenom())
                         .build());
             }
 
@@ -90,7 +87,6 @@ public class TransactionService {
             for (TransactionDao transactionDao: transactionDaoList){
                 if(transactionDao.getUser().getId().equals(userToken.get().getId())){
                     Optional<UserDao> userDaoOptional = userRepository.findById(transactionDao.getUser().getId());
-                    Optional<ProductDao> productDaoOptional = productRepository.findById(transactionDao.getProduct().getId());
 
                     transactionDtoList.add(TransactionDto.builder()
                         .id(transactionDao.getId())
@@ -104,9 +100,7 @@ public class TransactionService {
                         .category(transactionDao.getCategory())
                         .credentials(transactionDao.getCredentials())
                         .provider(transactionDao.getProvider())
-                        .product(ProductDto.builder()
-                                .denom(productDaoOptional.get().getDenom())
-                                .build())
+                        .denom(transactionDao.getDenom())
                         .build());
                 }
             }
@@ -140,9 +134,7 @@ public class TransactionService {
                     .category(transactionDao.getCategory())
                     .credentials(transactionDao.getCredentials())
                     .provider(transactionDao.getProvider())
-                    .product(ProductDto.builder()
-                            .denom(transactionDao.getProduct().getDenom())
-                            .build())
+                    .denom(transactionDao.getDenom())
                     .build(), HttpStatus.OK);
         }catch (Exception e){
             log.error("Got an error when getting transaction by id, error : {}",e.getMessage());
@@ -157,67 +149,97 @@ public class TransactionService {
                 return ResponseUtil.build("Username tidak ditemukan!", null, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<ProductDao> productDaoOptional = productRepository.findById(transactionDto.getProduct().getId());
-            if(productDaoOptional.isEmpty()){
-                return ResponseUtil.build("Product tidak ditemukan!", null, HttpStatus.BAD_REQUEST);
-            }
-
             if(transactionDto.getStatus() == null || transactionDto.getStatus().equals("Pending") || !transactionDto.getStatus().equals("Pending")){
-                TransactionDao transactionDao = TransactionDao.builder()
-                        .descriptions(transactionDto.getDescriptions())
-                        .status("Pending")
-                        .points(transactionDto.getPoints())
-                        .user(userDaoOptional.get())
-                        .category(transactionDto.getCategory())
-                        .credentials(transactionDto.getCredentials())
-                        .provider(transactionDto.getProvider())
-                        .product(productDaoOptional.get())
-                        .build();
-                transactionDao = transactionRepository.save(transactionDao);
+                if(transactionDto.getProduct() == null && transactionDto.getCategory().equals("shopping")){
+                    TransactionDao transactionDao = TransactionDao.builder()
+                            .descriptions(transactionDto.getDescriptions())
+                            .status("Pending")
+                            .points(transactionDto.getPoints())
+                            .user(userDaoOptional.get())
+                            .category(transactionDto.getCategory())
+                            .credentials(transactionDto.getCredentials())
+                            .provider(transactionDto.getProvider())
+                            .denom(transactionDto.getDenom())
+                            .build();
+                    transactionDao = transactionRepository.save(transactionDao);
 
-                ProductDao productDao = productDaoOptional.get();
+                    UserDao userDao = userDaoOptional.get();
 
-                UserDao userDao = userDaoOptional.get();
+                    userDao.setPoint(userDao.getPoint() + transactionDao.getPoints());
+                    userRepository.save(userDao);
 
-                if(transactionDao.getCategory().equals("Shopping")){
-                    userDao.setPoint(userDao.getPoint() + productDao.getPoints());
-                    userDao = userRepository.save(userDao);
-                }else if(transactionDao.getCategory().equals("Pulsa") || transactionDao.getCategory().equals("E-Money") || transactionDao.getCategory().equals("Paket Data") || transactionDao.getCategory().equals("Cash Out")){
-                    if(userDao.getPoint() - productDao.getPoints() >= 0){
+                    return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
+                            .id(transactionDao.getId())
+                            .created(transactionDao.getCreatedAt())
+                            .descriptions(transactionDao.getDescriptions())
+                            .status(transactionDao.getStatus())
+                            .points(transactionDao.getPoints())
+                            .user(
+                                    UserDto.builder()
+                                            .username(userDaoOptional.get().getUsername())
+                                            .build()
+                            )
+                            .category(transactionDao.getCategory())
+                            .credentials(transactionDao.getCredentials())
+                            .provider(transactionDao.getProvider())
+                            .denom(transactionDao.getDenom())
+                            .build(), HttpStatus.OK);
+                }else if(!transactionDto.getCategory().equals("shopping") && !(transactionDto.getProduct() == null)){
+                    Optional<ProductDao> productDaoOptional = productRepository.findById(transactionDto.getProduct().getId());
+                    if(productDaoOptional.isEmpty()){
+                        return ResponseUtil.build("Product tidak ditemukan!", null, HttpStatus.BAD_REQUEST);
+                    }
+
+                    TransactionDao transactionDao = TransactionDao.builder()
+                            .descriptions(transactionDto.getDescriptions())
+                            .status("Pending")
+                            .points(transactionDto.getPoints())
+                            .user(userDaoOptional.get())
+                            .category(transactionDto.getCategory())
+                            .credentials(transactionDto.getCredentials())
+                            .provider(transactionDto.getProvider())
+                            .denom(transactionDto.getDenom())
+                            .product(productDaoOptional.get())
+                            .build();
+                    transactionDao = transactionRepository.save(transactionDao);
+
+                    ProductDao productDao = productDaoOptional.get();
+
+                    UserDao userDao = userDaoOptional.get();
+
+                    if(userDao.getPoint() - transactionDao.getPoints() >= 0){
                         if(productDao.getStock() > 0){
-                            userDao.setPoint(userDao.getPoint() - productDao.getPoints());
-                            userDao = userRepository.save(userDao);
+                            userDao.setPoint(userDao.getPoint() - transactionDao.getPoints());
+                            userRepository.save(userDao);
 
                             productDao.setStock(productDao.getStock() - 1);
-                            productDao = productRepository.save(productDao);
+                            productRepository.save(productDao);
                         }else{
                             return ResponseUtil.build("Stock product tidak mencukupi!", null, HttpStatus.INTERNAL_SERVER_ERROR);
                         }
                     }else{
                         return ResponseUtil.build(ConstantApp.INSUFFICIENT_POINT, null, HttpStatus.BAD_REQUEST);
                     }
-                }
 
-                return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
-                        .id(transactionDao.getId())
-                        .created(transactionDao.getCreatedAt())
-                        .descriptions(transactionDao.getDescriptions())
-                        .status(transactionDao.getStatus())
-                        .points(transactionDao.getPoints())
-                        .user(
-                                UserDto.builder()
-                                        .username(userDaoOptional.get().getUsername())
-                                        .build()
-                        )
-                        .category(transactionDao.getCategory())
-                        .credentials(transactionDao.getCredentials())
-                        .provider(transactionDao.getProvider())
-                        .product(
-                                ProductDto.builder()
-                                        .denom(productDaoOptional.get().getDenom())
-                                        .build()
-                        )
-                        .build(), HttpStatus.OK);
+                    return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
+                            .id(transactionDao.getId())
+                            .created(transactionDao.getCreatedAt())
+                            .descriptions(transactionDao.getDescriptions())
+                            .status(transactionDao.getStatus())
+                            .points(transactionDao.getPoints())
+                            .user(
+                                    UserDto.builder()
+                                            .username(userDaoOptional.get().getUsername())
+                                            .build()
+                            )
+                            .category(transactionDao.getCategory())
+                            .credentials(transactionDao.getCredentials())
+                            .provider(transactionDao.getProvider())
+                            .denom(transactionDao.getDenom())
+                            .build(), HttpStatus.OK);
+                }else{
+                    return ResponseUtil.build(ConstantApp.INVALID_DATA, null, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
             }
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e){
@@ -282,6 +304,10 @@ public class TransactionService {
                 transactionDaoOptional.get().setProvider(request.getProvider());
             }
 
+            if (request.getDenom() != null) {
+                transactionDaoOptional.get().setDenom(request.getDenom());
+            }
+
             if (request.getProduct() != null) {
                 transactionDaoOptional.get().setProduct(productDaoOptional.get());
             }
@@ -301,11 +327,7 @@ public class TransactionService {
                     .category(transactionDaoOptional.get().getCategory())
                     .credentials(transactionDaoOptional.get().getCredentials())
                     .provider(transactionDaoOptional.get().getProvider())
-                    .product(
-                            ProductDto.builder()
-                                    .denom(productDaoOptional.get().getDenom())
-                                    .build()
-                    )
+                    .denom(transactionDaoOptional.get().getDenom())
                     .build(), HttpStatus.OK);
 
         }catch (Exception e){
