@@ -2,9 +2,7 @@ package com.sweetpoint.demo.service;
 
 import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.ProductDao;
-import com.sweetpoint.demo.domain.dao.UserDao;
 import com.sweetpoint.demo.domain.dto.request.ProductDto;
-import com.sweetpoint.demo.domain.dto.request.UserDto;
 import com.sweetpoint.demo.repository.ProductRepository;
 import com.sweetpoint.demo.repository.UserRepository;
 import com.sweetpoint.demo.security.JwtTokenProvider;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -111,7 +108,7 @@ public class ProductService {
                             .points(productDao.getPoints())
                             .stock(productDao.getStock())
                             .image(productDao.getImage())
-                            .build(), HttpStatus.OK);
+                            .build(), HttpStatus.CREATED);
                 }
 
                 if(productDto.getCategory().equals("E-Money")){
@@ -135,7 +132,7 @@ public class ProductService {
                             .points(productDao.getPoints())
                             .stock(productDao.getStock())
                             .image(productDao.getImage())
-                            .build(), HttpStatus.OK);
+                            .build(), HttpStatus.CREATED);
                 }
 
                 if(productDto.getCategory().equals("Pulsa")){
@@ -159,7 +156,7 @@ public class ProductService {
                             .points(productDao.getPoints())
                             .stock(productDao.getStock())
                             .image(productDao.getImage())
-                            .build(), HttpStatus.OK);
+                            .build(), HttpStatus.CREATED);
                 }
 
                 if(productDto.getCategory().equals("Paket Data")){
@@ -183,7 +180,7 @@ public class ProductService {
                             .points(productDao.getPoints())
                             .stock(productDao.getStock())
                             .image(productDao.getImage())
-                            .build(), HttpStatus.OK);
+                            .build(), HttpStatus.CREATED);
                 }
             }
             return ResponseUtil.build(ConstantApp.INVALID_DATA, null, HttpStatus.INTERNAL_SERVER_ERROR);

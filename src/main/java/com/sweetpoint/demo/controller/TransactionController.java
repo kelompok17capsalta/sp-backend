@@ -26,8 +26,12 @@ public class TransactionController {
     private UserService userService;
 
     @GetMapping("/")
-    public ResponseEntity<Object> get(){
-        return transactionService.getAllTransaction();
+    public ResponseEntity<Object> get(Principal principal){
+        UserDao user = (UserDao) userService.loadUserByUsername(principal.getName());
+        if (user.getRole().equals("Admin")){
+            return transactionService.getAllTransaction();
+        }
+        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/user")
@@ -40,7 +44,7 @@ public class TransactionController {
         return transactionService.getTransactionById(id);
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "/new")
     public ResponseEntity<?> create(@RequestBody TransactionDto transaction){
         return transactionService.createNewTransaction(transaction);
     }
@@ -51,7 +55,6 @@ public class TransactionController {
         if (user.getRole().equals("Admin")){
             return transactionService.updateTransaction(id, transaction);
         }
-
         return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 
@@ -61,7 +64,6 @@ public class TransactionController {
         if (user.getRole().equals("Admin")){
             return transactionService.deleteTransaction(id);
         }
-
         return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
 }
