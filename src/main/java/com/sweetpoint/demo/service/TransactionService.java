@@ -150,7 +150,7 @@ public class TransactionService {
             }
 
             if(transactionDto.getStatus() == null || transactionDto.getStatus().equals("Pending") || !transactionDto.getStatus().equals("Pending")){
-                if(transactionDto.getProduct() == null && transactionDto.getCategory().equals("shopping")){
+                if(transactionDto.getProduct() == null && transactionDto.getCategory().equals("shopping") && transactionDto.getDenom() == null){
                     TransactionDao transactionDao = TransactionDao.builder()
                             .descriptions(transactionDto.getDescriptions())
                             .status("Pending")
@@ -159,14 +159,14 @@ public class TransactionService {
                             .category(transactionDto.getCategory())
                             .credentials(transactionDto.getCredentials())
                             .provider(transactionDto.getProvider())
-                            .denom(transactionDto.getDenom())
                             .build();
-                    transactionDao = transactionRepository.save(transactionDao);
 
                     UserDao userDao = userDaoOptional.get();
 
                     userDao.setPoint(userDao.getPoint() + transactionDao.getPoints());
                     userRepository.save(userDao);
+
+                    transactionDao = transactionRepository.save(transactionDao);
 
                     return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
                             .id(transactionDao.getId())
@@ -201,7 +201,6 @@ public class TransactionService {
                             .denom(transactionDto.getDenom())
                             .product(productDaoOptional.get())
                             .build();
-                    transactionDao = transactionRepository.save(transactionDao);
 
                     ProductDao productDao = productDaoOptional.get();
 
@@ -214,29 +213,31 @@ public class TransactionService {
 
                             productDao.setStock(productDao.getStock() - 1);
                             productRepository.save(productDao);
+
+                            transactionDao = transactionRepository.save(transactionDao);
+
+                            return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
+                                    .id(transactionDao.getId())
+                                    .created(transactionDao.getCreatedAt())
+                                    .descriptions(transactionDao.getDescriptions())
+                                    .status(transactionDao.getStatus())
+                                    .points(transactionDao.getPoints())
+                                    .user(
+                                            UserDto.builder()
+                                                    .username(userDaoOptional.get().getUsername())
+                                                    .build()
+                                    )
+                                    .category(transactionDao.getCategory())
+                                    .credentials(transactionDao.getCredentials())
+                                    .provider(transactionDao.getProvider())
+                                    .denom(transactionDao.getDenom())
+                                    .build(), HttpStatus.OK);
                         }else{
                             return ResponseUtil.build("Stock product tidak mencukupi!", null, HttpStatus.INTERNAL_SERVER_ERROR);
                         }
                     }else{
                         return ResponseUtil.build(ConstantApp.INSUFFICIENT_POINT, null, HttpStatus.BAD_REQUEST);
                     }
-
-                    return ResponseUtil.build(ConstantApp.SUCCESS, TransactionDto.builder()
-                            .id(transactionDao.getId())
-                            .created(transactionDao.getCreatedAt())
-                            .descriptions(transactionDao.getDescriptions())
-                            .status(transactionDao.getStatus())
-                            .points(transactionDao.getPoints())
-                            .user(
-                                    UserDto.builder()
-                                            .username(userDaoOptional.get().getUsername())
-                                            .build()
-                            )
-                            .category(transactionDao.getCategory())
-                            .credentials(transactionDao.getCredentials())
-                            .provider(transactionDao.getProvider())
-                            .denom(transactionDao.getDenom())
-                            .build(), HttpStatus.OK);
                 }else{
                     return ResponseUtil.build(ConstantApp.INVALID_DATA, null, HttpStatus.INTERNAL_SERVER_ERROR);
                 }

@@ -41,7 +41,7 @@ public class TransactionController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<?> create(Principal principal, @RequestBody TransactionDto transaction){
+    public ResponseEntity<?> create(@RequestBody TransactionDto transaction){
         return transactionService.createNewTransaction(transaction);
     }
 
