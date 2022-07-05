@@ -288,45 +288,4 @@ public class ProductService {
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    public ResponseEntity<Object> redeemProduct(Long id, HttpServletRequest request){
-        try {
-            log.info("Redeeming product, id : {}", id);
-            Optional<ProductDao> productDaoOptional = productRepository.findById(id);
-
-            if (productDaoOptional.isEmpty()){
-                return ResponseUtil.build(ConstantApp.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
-            }
-
-            String bearerToken = request.getHeader("Authorization");
-            String token = bearerToken.substring(7);
-
-            Optional<UserDao> userDaoOptional = userRepository.findById(jwtTokenProvider.getId(token));
-
-            ProductDao productDao = productDaoOptional.get();
-
-            UserDao userDao = userDaoOptional.get();
-
-            if(userDao.getPoint() - productDao.getPoints() >= 0){
-                userDao.setPoint(userDao.getPoint() - productDao.getPoints());
-                userDao = userRepository.save(userDao);
-
-                productDao.setStock(productDao.getStock() - 1);
-                productDao = productRepository.save(productDao);
-
-                if(productDao.getStock() <= 0){
-                    productRepository.delete(productDao);
-                }
-
-                return ResponseUtil.build(ConstantApp.SUCCESS, UserDto.builder()
-                        .id(userDao.getId())
-                        .point(userDao.getPoint())
-                        .build(), HttpStatus.OK);
-            }
-            return ResponseUtil.build(ConstantApp.INSUFFICIENT_POINT, null, HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
-            log.error("Got an error when redeeming product by id, error : {}", e.getMessage());
-            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }
