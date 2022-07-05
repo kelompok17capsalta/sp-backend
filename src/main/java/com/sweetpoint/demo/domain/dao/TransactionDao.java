@@ -51,7 +51,8 @@ public class TransactionDao extends BaseDao implements Serializable {
     @Column(name = "denom", nullable = false)
     private Integer denom;
 
-    @Column(name = "product")
-    private Long product;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private ProductDao product;
 
 }
