@@ -48,7 +48,7 @@ public class TransactionDao extends BaseDao implements Serializable {
     @Column(name = "provider", nullable = false)
     private String provider;
 
-    @Column(name = "denom")
+    @Column(name = "denom", nullable = false)
     private Integer denom;
 
     @ManyToOne
