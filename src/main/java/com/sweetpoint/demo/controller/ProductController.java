@@ -64,9 +64,4 @@ public class ProductController {
         }
         return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
     }
-
-    @PostMapping("/redeem/{id}")
-    public ResponseEntity<Object> redeem(@PathVariable Long id, HttpServletRequest request) {
-        return productService.redeemProduct(id, request);
-    }
 }

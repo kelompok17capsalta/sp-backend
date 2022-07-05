@@ -33,5 +33,6 @@ public class TransactionDto implements Serializable {
     private String category;
     private String credentials;
     private String provider;
+    private Integer denom;
     private ProductDto product;
 }
