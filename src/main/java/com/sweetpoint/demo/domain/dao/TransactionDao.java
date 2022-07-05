@@ -10,7 +10,6 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "m_transaction")
-@SQLDelete(sql = "UPDATE m_product SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? ")
+@SQLDelete(sql = "UPDATE m_transaction SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? ")
 @Where(clause = "deleted_at IS NULL")
 public class TransactionDao extends BaseDao implements Serializable {
 
@@ -37,8 +36,8 @@ public class TransactionDao extends BaseDao implements Serializable {
     @Column(name = "points", nullable = false)
     private Integer points;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    private UserDao user;
 
     @Column(name = "category", nullable = false)
     private String category;
@@ -49,6 +48,7 @@ public class TransactionDao extends BaseDao implements Serializable {
     @Column(name = "provider", nullable = false)
     private String provider;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    private ProductDao product;
+
 }

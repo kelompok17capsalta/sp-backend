@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Slf4j
@@ -29,9 +30,9 @@ public class TransactionController {
         return transactionService.getAllTransaction();
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable Long id){
-        return transactionService.getUserTransaction(id);
+    @GetMapping("/user")
+    public ResponseEntity<Object> getUser(HttpServletRequest request){
+        return transactionService.getUserTransaction(request);
     }
 
     @GetMapping("/{id}")
@@ -41,12 +42,7 @@ public class TransactionController {
 
     @PostMapping(value = "/")
     public ResponseEntity<?> create(Principal principal, @RequestBody TransactionDto transaction){
-        UserDao user = (UserDao) userService.loadUserByUsername(principal.getName());
-        if (user.getRole().equals("Admin")){
-            return transactionService.createNewTransaction(transaction);
-        }
-
-        return ResponseUtil.build(ConstantApp.NOT_AUTHORIZED, null, HttpStatus.FORBIDDEN);
+        return transactionService.createNewTransaction(transaction);
     }
 
     @PutMapping("/{id}")

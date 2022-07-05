@@ -29,9 +29,9 @@ public class TransactionDto implements Serializable {
     private String descriptions;
     private String status;
     private Integer points;
-    private Long userId;
+    private UserDto user;
     private String category;
     private String credentials;
     private String provider;
-    private Long productId;
+    private ProductDto product;
 }
