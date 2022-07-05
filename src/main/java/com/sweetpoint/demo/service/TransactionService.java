@@ -153,7 +153,7 @@ public class TransactionService {
                 if(transactionDto.getProduct() == null && transactionDto.getCategory().equals("shopping")){
                     TransactionDao transactionDao = TransactionDao.builder()
                             .descriptions(transactionDto.getDescriptions())
-                            .status("Pending")
+                            .status(transactionDto.getStatus())
                             .points(transactionDto.getPoints())
                             .user(userDaoOptional.get())
                             .category(transactionDto.getCategory())
