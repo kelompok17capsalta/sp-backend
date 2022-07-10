@@ -51,7 +51,7 @@ public class TransactionDao extends BaseDao implements Serializable {
     @Column(name = "denom", nullable = false)
     private Integer denom;
 
-    @Column(name = "product_id", nullable = false)
+    @Column(name = "product_id")
     private Long product;
 
 }
