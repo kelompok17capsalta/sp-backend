@@ -27,9 +27,6 @@ public class BaseDao implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted;
-
     @Column(name = "deleted_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime deletedAt;
@@ -37,7 +34,6 @@ public class BaseDao implements Serializable {
     @PrePersist
     void onCreated(){
         this.createdAt = LocalDateTime.now();
-        this.isDeleted = false;
     }
 
     @PreUpdate
