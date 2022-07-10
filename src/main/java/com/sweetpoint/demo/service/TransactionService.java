@@ -186,7 +186,7 @@ public class TransactionService {
                             .denom(transactionDao.getDenom())
                             .build(), HttpStatus.CREATED);
                 }else if(!transactionDto.getCategory().equals("shopping") && !(transactionDto.getProduct() == null)){
-                    Optional<ProductDao> productDaoOptional = productRepository.findById(transactionDto.getProduct().getId());
+                    Optional<ProductDao> productDaoOptional = productRepository.findById(transactionDto.getProduct());
                     if(productDaoOptional.isEmpty()){
                         return ResponseUtil.build("Product tidak ditemukan!", null, HttpStatus.BAD_REQUEST);
                     }
@@ -200,7 +200,7 @@ public class TransactionService {
                             .credentials(transactionDto.getCredentials())
                             .provider(transactionDto.getProvider())
                             .denom(transactionDto.getDenom())
-                            .product(productDaoOptional.get())
+                            .product(transactionDto.getProduct())
                             .build();
 
                     ProductDao productDao = productDaoOptional.get();
@@ -307,13 +307,13 @@ public class TransactionService {
             }
 
             if (request.getProduct() != null) {
-                Optional<ProductDao> productDaoOptional = productRepository.findById(request.getProduct().getId());
+                Optional<ProductDao> productDaoOptional = productRepository.findById(request.getProduct());
 
                 if(productDaoOptional.isEmpty()){
                     return ResponseUtil.build("Product tidak ditemukan!", null, HttpStatus.BAD_REQUEST);
                 }
 
-                transactionDaoOptional.get().setProduct(productDaoOptional.get());
+                transactionDaoOptional.get().setProduct(request.getProduct());
             }
 
             transactionRepository.save(transactionDaoOptional.get());
