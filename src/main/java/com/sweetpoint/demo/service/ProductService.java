@@ -183,7 +183,7 @@ public class ProductService {
                             .build(), HttpStatus.CREATED);
                 }
             }
-            return ResponseUtil.build(ConstantApp.INVALID_DATA, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseUtil.build(ConstantApp.INVALID_DATA, null, HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             log.error("Get an error create new product, error : {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -53,6 +53,15 @@ public class UserServiceTest {
     }
 
     @Test
+    public void getAllUser_Failed() {
+        when(userRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = userService.getAllUser();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     public void getUserById_Success() {
         UserDao userDao = UserDao.builder()
                 .id(1L)
@@ -77,6 +86,15 @@ public class UserServiceTest {
         ResponseEntity<Object> responseEntity = userService.getUserById(anyLong());
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void getUserById_Failed() {
+        when(userRepository.findById(1L)).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = userService.getUserById(1L);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -121,6 +139,36 @@ public class UserServiceTest {
     }
 
     @Test
+    public void updateUser_Failed_Error() throws Exception {
+        UserDao userDao = UserDao.builder()
+                .id(1L)
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userDao));
+        when(userRepository.save(any())).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = userService.updateUser(1L, UserDto.builder()
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     public void deleteUser_Success() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(UserDao.builder()
                 .id(1L)
@@ -144,5 +192,15 @@ public class UserServiceTest {
         ResponseEntity<Object> user = userService.deleteUser(anyLong());
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), user.getStatusCodeValue());
+    }
+
+    @Test
+    public void deleteUser_Failed_Error() {
+        when(userRepository.findById(anyLong())).thenThrow(NullPointerException.class);
+        doNothing().when(userRepository).delete(any());
+
+        ResponseEntity<Object> responseEntity = userService.deleteUser(anyLong());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), responseEntity.getStatusCodeValue());
     }
 }
