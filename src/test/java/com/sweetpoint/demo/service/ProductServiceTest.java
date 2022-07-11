@@ -182,6 +182,51 @@ public class ProductServiceTest {
     }
 
     @Test
+    void createNewProduct_InvalidData() {
+        ProductDao productDao = ProductDao.builder()
+                .id(1L)
+                .productName("Nama")
+                .denom(100000)
+                .category("Cash Out")
+                .descriptions("Test")
+                .points(100)
+                .stock(0)
+                .image("test.jpeg")
+                .build();
+
+        when(productRepository.save(any())).thenReturn(productDao);
+        ResponseEntity<Object> responseEntity = productService.createNewProduct(ProductDto.builder()
+                .productName("Nama")
+                .denom(100000)
+                .category("Cash Out")
+                .descriptions("Test")
+                .points(100)
+                .stock(0)
+                .image("test.jpeg")
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        ProductDto data = (ProductDto) Objects.requireNonNull(apiResponse).getData();
+        assertEquals(HttpStatus.BAD_REQUEST.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void createNewProduct_Failed() {
+        when(productRepository.findById(anyLong())).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.createNewProduct(ProductDto.builder()
+                .productName("Nama")
+                .denom(100000)
+                .category("Paket Data")
+                .descriptions("Test")
+                .points(100)
+                .stock(10)
+                .image("test.jpeg")
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     public void getAllProduct_Success() {
 
         when(this.productRepository.findAll()).thenReturn(List.of(product));
@@ -190,6 +235,15 @@ public class ProductServiceTest {
         List<ProductDto> productDtoList = apiResponse.getData();
 
         assertNotNull(productDtoList);
+    }
+
+    @Test
+    public void getAllProduct_Failed() {
+        when(productRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.getAllProduct();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -216,6 +270,15 @@ public class ProductServiceTest {
         ResponseEntity<Object> responseEntity = productService.getProductById(anyLong());
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void getProductById_Failed() {
+        when(productRepository.findById(1L)).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.getProductById(1L);
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -349,6 +412,34 @@ public class ProductServiceTest {
     }
 
     @Test
+    public void updateProduct_Failed_Error() throws Exception {
+        ProductDao productDao = ProductDao.builder()
+                .id(1L)
+                .productName("Nama")
+                .denom(100000)
+                .category("Paket Data")
+                .descriptions("Test")
+                .points(100)
+                .stock(10)
+                .image("test.jpeg")
+                .build();
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(productDao));
+        when(productRepository.save(any())).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.updateProduct(1L, ProductDto.builder()
+                .productName("Produk")
+                .denom(50000)
+                .category("Cash Out")
+                .descriptions("Deskripsi")
+                .points(500)
+                .stock(50)
+                .image("image.jpeg")
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     public void deleteProduct_Success() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(ProductDao.builder()
                 .id(1L)
@@ -371,5 +462,15 @@ public class ProductServiceTest {
         ResponseEntity<Object> product = productService.deleteProduct(anyLong());
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), product.getStatusCodeValue());
+    }
+
+    @Test
+    public void deleteProduct_Failed_Error() {
+        when(productRepository.findById(anyLong())).thenThrow(NullPointerException.class);
+        doNothing().when(productRepository).delete(any());
+
+        ResponseEntity<Object> responseEntity = productService.deleteProduct(anyLong());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), responseEntity.getStatusCodeValue());
     }
 }
