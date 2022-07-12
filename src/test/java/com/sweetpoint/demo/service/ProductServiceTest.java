@@ -41,6 +41,39 @@ public class ProductServiceTest {
             .image("test.jpeg")
             .build();
 
+    private final ProductDao productEmoney = ProductDao.builder()
+            .id(1L)
+            .productName("Nama")
+            .denom(100000)
+            .category("E-Money")
+            .descriptions("Test")
+            .points(100)
+            .stock(10)
+            .image("test.jpeg")
+            .build();
+
+    private final ProductDao productPulsa = ProductDao.builder()
+            .id(1L)
+            .productName("Nama")
+            .denom(100000)
+            .category("Pulsa")
+            .descriptions("Test")
+            .points(100)
+            .stock(10)
+            .image("test.jpeg")
+            .build();
+
+    private final ProductDao productPaketData = ProductDao.builder()
+            .id(1L)
+            .productName("Nama")
+            .denom(100000)
+            .category("Paket Data")
+            .descriptions("Test")
+            .points(100)
+            .stock(10)
+            .image("test.jpeg")
+            .build();
+
     @Test
     void createNewProduct_CashSuccess_Test() {
         ProductDao productDao = ProductDao.builder()
@@ -241,6 +274,86 @@ public class ProductServiceTest {
     public void getAllProduct_Failed() {
         when(productRepository.findAll()).thenThrow(NullPointerException.class);
         ResponseEntity<Object> responseEntity = productService.getAllProduct();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void getCashOutProduct_Success() {
+
+        when(this.productRepository.findAll()).thenReturn(List.of(product));
+        ResponseEntity<Object> responseEntity = productService.getCashoutProduct();
+        ApiResponse<List<ProductDto>> apiResponse = (ApiResponse<List<ProductDto>>) responseEntity.getBody();
+        List<ProductDto> productDtoList = apiResponse.getData();
+
+        assertNotNull(productDtoList);
+    }
+
+    @Test
+    public void getCashOutProduct_Failed() {
+        when(productRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.getCashoutProduct();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void getEmoneyProduct_Success() {
+
+        when(this.productRepository.findAll()).thenReturn(List.of(productEmoney));
+        ResponseEntity<Object> responseEntity = productService.getEmoneyProduct();
+        ApiResponse<List<ProductDto>> apiResponse = (ApiResponse<List<ProductDto>>) responseEntity.getBody();
+        List<ProductDto> productDtoList = apiResponse.getData();
+
+        assertNotNull(productDtoList);
+    }
+
+    @Test
+    public void getEmoneyProduct_Failed() {
+        when(productRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.getEmoneyProduct();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void getPulsaProduct_Success() {
+
+        when(this.productRepository.findAll()).thenReturn(List.of(productPulsa));
+        ResponseEntity<Object> responseEntity = productService.getPulsaProduct();
+        ApiResponse<List<ProductDto>> apiResponse = (ApiResponse<List<ProductDto>>) responseEntity.getBody();
+        List<ProductDto> productDtoList = apiResponse.getData();
+
+        assertNotNull(productDtoList);
+    }
+
+    @Test
+    public void getPulsaProduct_Failed() {
+        when(productRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.getPulsaProduct();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void getPaketDataProduct_Success() {
+
+        when(this.productRepository.findAll()).thenReturn(List.of(productPaketData));
+        ResponseEntity<Object> responseEntity = productService.getPaketDataProduct();
+        ApiResponse<List<ProductDto>> apiResponse = (ApiResponse<List<ProductDto>>) responseEntity.getBody();
+        List<ProductDto> productDtoList = apiResponse.getData();
+
+        assertNotNull(productDtoList);
+    }
+
+    @Test
+    public void getPaketDataProduct_Failed() {
+        when(productRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.getPaketDataProduct();
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());

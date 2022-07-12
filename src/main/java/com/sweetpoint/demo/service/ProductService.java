@@ -58,6 +58,118 @@ public class ProductService {
         }
     }
 
+    public ResponseEntity<Object> getCashoutProduct(){
+        try {
+            log.info("Getting all cash out products");
+            List<ProductDao> productDaoList = productRepository.findAll();
+            List<ProductDto> productDtoList = new ArrayList<>();
+
+            for (ProductDao productDao: productDaoList){
+                if(productDao.getCategory().equals("Cash Out")){
+                    productDtoList.add(ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build());
+                }
+            }
+
+            return ResponseUtil.build(ConstantApp.SUCCESS, productDtoList, HttpStatus.OK);
+        }catch (Exception e) {
+            log.error("Got an error when getting all cash out product, error : {}", e.getMessage());
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Object> getEmoneyProduct(){
+        try {
+            log.info("Getting all e-money products");
+            List<ProductDao> productDaoList = productRepository.findAll();
+            List<ProductDto> productDtoList = new ArrayList<>();
+
+            for (ProductDao productDao: productDaoList){
+                if(productDao.getCategory().equals("E-Money")){
+                    productDtoList.add(ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build());
+                }
+            }
+
+            return ResponseUtil.build(ConstantApp.SUCCESS, productDtoList, HttpStatus.OK);
+        }catch (Exception e) {
+            log.error("Got an error when getting all e-money product, error : {}", e.getMessage());
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Object> getPulsaProduct(){
+        try {
+            log.info("Getting all pulsa products");
+            List<ProductDao> productDaoList = productRepository.findAll();
+            List<ProductDto> productDtoList = new ArrayList<>();
+
+            for (ProductDao productDao: productDaoList){
+                if(productDao.getCategory().equals("Pulsa")){
+                    productDtoList.add(ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build());
+                }
+            }
+
+            return ResponseUtil.build(ConstantApp.SUCCESS, productDtoList, HttpStatus.OK);
+        }catch (Exception e) {
+            log.error("Got an error when getting all pulsa product, error : {}", e.getMessage());
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Object> getPaketDataProduct(){
+        try {
+            log.info("Getting all paket data products");
+            List<ProductDao> productDaoList = productRepository.findAll();
+            List<ProductDto> productDtoList = new ArrayList<>();
+
+            for (ProductDao productDao: productDaoList){
+                if(productDao.getCategory().equals("Paket Data")){
+                    productDtoList.add(ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build());
+                }
+            }
+
+            return ResponseUtil.build(ConstantApp.SUCCESS, productDtoList, HttpStatus.OK);
+        }catch (Exception e) {
+            log.error("Got an error when getting all paket data product, error : {}", e.getMessage());
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public ResponseEntity<Object> getProductById(Long id){
         try {
             log.info("Getting product by id, id : {}", id);
