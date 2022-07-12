@@ -30,6 +30,26 @@ public class ProductController {
         return productService.getAllProduct();
     }
 
+    @GetMapping("/cashout")
+    public ResponseEntity<Object> getCash(){
+        return productService.getCashoutProduct();
+    }
+
+    @GetMapping("/emoney")
+    public ResponseEntity<Object> getEmoney(){
+        return productService.getEmoneyProduct();
+    }
+
+    @GetMapping("/pulsa")
+    public ResponseEntity<Object> getPulsa(){
+        return productService.getPulsaProduct();
+    }
+
+    @GetMapping("/paketdata")
+    public ResponseEntity<Object> getPaketData(){
+        return productService.getPaketDataProduct();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable Long id) {
         return productService.getProductById(id);
