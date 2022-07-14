@@ -50,6 +50,11 @@ public class ProductController {
         return productService.getPaketDataProduct();
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<Object> getRandom(){
+        return productService.randomizeAllProduct();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable Long id) {
         return productService.getProductById(id);
