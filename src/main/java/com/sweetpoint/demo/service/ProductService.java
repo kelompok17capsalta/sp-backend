@@ -4,8 +4,6 @@ import com.sweetpoint.demo.constant.ConstantApp;
 import com.sweetpoint.demo.domain.dao.ProductDao;
 import com.sweetpoint.demo.domain.dto.request.ProductDto;
 import com.sweetpoint.demo.repository.ProductRepository;
-import com.sweetpoint.demo.repository.UserRepository;
-import com.sweetpoint.demo.security.JwtTokenProvider;
 import com.sweetpoint.demo.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
 public class ProductService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private ProductRepository productRepository;
@@ -54,7 +43,34 @@ public class ProductService {
         }catch (Exception e) {
             log.error("Got an error when getting all product's information, error : {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    public ResponseEntity<Object> randomizeAllProduct(){
+        try {
+            log.info("Randomizing all product");
+            List<ProductDao> productDaoList = productRepository.findAll();
+            List<ProductDto> productDtoList = new ArrayList<>();
+
+            for (ProductDao productDao: productDaoList){
+                productDtoList.add(ProductDto.builder()
+                        .id(productDao.getId())
+                        .productName(productDao.getProductName())
+                        .denom(productDao.getDenom())
+                        .category(productDao.getCategory())
+                        .descriptions(productDao.getDescriptions())
+                        .points(productDao.getPoints())
+                        .stock(productDao.getStock())
+                        .image(productDao.getImage())
+                        .build());
+            }
+
+            Collections.shuffle(productDtoList);
+
+            return ResponseUtil.build(ConstantApp.SUCCESS, productDtoList, HttpStatus.OK);
+        }catch (Exception e) {
+            log.error("Got an error when getting all product's information, error : {}", e.getMessage());
+            return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

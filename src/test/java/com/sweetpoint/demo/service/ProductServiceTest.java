@@ -280,6 +280,26 @@ public class ProductServiceTest {
     }
 
     @Test
+    public void randomizeAllProduct_Success() {
+
+        when(this.productRepository.findAll()).thenReturn(List.of(product));
+        ResponseEntity<Object> responseEntity = productService.randomizeAllProduct();
+        ApiResponse<List<ProductDto>> apiResponse = (ApiResponse<List<ProductDto>>) responseEntity.getBody();
+        List<ProductDto> productDtoList = apiResponse.getData();
+
+        assertNotNull(productDtoList);
+    }
+
+    @Test
+    public void randomizeAllProduct_Failed() {
+        when(productRepository.findAll()).thenThrow(NullPointerException.class);
+        ResponseEntity<Object> responseEntity = productService.randomizeAllProduct();
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     public void getCashOutProduct_Success() {
 
         when(this.productRepository.findAll()).thenReturn(List.of(product));
