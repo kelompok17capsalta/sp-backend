@@ -7,6 +7,7 @@ import com.sweetpoint.demo.domain.dao.UserDao;
 import com.sweetpoint.demo.domain.dto.request.ProductDto;
 import com.sweetpoint.demo.domain.dto.request.TransactionDto;
 import com.sweetpoint.demo.domain.dto.request.UserDto;
+import com.sweetpoint.demo.domain.dto.response.CountResponse;
 import com.sweetpoint.demo.repository.ProductRepository;
 import com.sweetpoint.demo.repository.TransactionRepository;
 import com.sweetpoint.demo.repository.UserRepository;
@@ -40,8 +41,6 @@ public class AdminService {
             int product = 0;
             int transaction = 0;
 
-            List<Integer> data = new ArrayList<>();
-
             List<UserDao> userDaoList = userRepository.findAll();
 
             for(UserDao userDao: userDaoList){
@@ -50,15 +49,11 @@ public class AdminService {
                 }
             }
 
-            data.add(user);
-
             List<ProductDao> productDaoList = productRepository.findAll();
 
             for (ProductDao productDao: productDaoList){
                 product++;
             }
-
-            data.add(product);
 
             List<TransactionDao> transactionDaoList = transactionRepository.findAll();
 
@@ -66,9 +61,11 @@ public class AdminService {
                 transaction++;
             }
 
-            data.add(transaction);
-
-            return ResponseUtil.build(ConstantApp.SUCCESS, data, HttpStatus.OK);
+            return ResponseUtil.build(ConstantApp.SUCCESS, CountResponse.builder()
+                    .user(user)
+                    .product(product)
+                    .transaction(transaction)
+                    .build(), HttpStatus.OK);
         }catch (Exception e) {
             log.error("Got an error when getting all data, error : {}", e.getMessage());
             return ResponseUtil.build(ConstantApp.ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
