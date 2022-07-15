@@ -87,10 +87,8 @@ public class AdminServiceTest {
         when(this.userRepository.findAll()).thenReturn(List.of(user));
         when(this.transactionRepository.findAll()).thenReturn(List.of(transaction));
         ResponseEntity<Object> responseEntity = adminService.getAllData();
-        ApiResponse<List<Integer>> apiResponse = (ApiResponse<List<Integer>>) responseEntity.getBody();
-        List<Integer> data = apiResponse.getData();
 
-        assertNotNull(data);
+        assertEquals(HttpStatus.OK.value(), responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -101,6 +99,6 @@ public class AdminServiceTest {
         ResponseEntity<Object> responseEntity = adminService.getAllData();
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), responseEntity.getStatusCodeValue());
     }
 }
