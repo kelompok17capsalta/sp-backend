@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @SpringBootTest
 @Tag(value = "UserServiceTest")
@@ -42,6 +44,40 @@ public class UserServiceTest {
             .build();
 
     @Test
+    void loadUserByUsernameSuccess_Test() {
+        UserDao userDao = UserDao.builder()
+                .id(1L)
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build();
+
+        when(userRepository.getDistinctTopByUsername(any())).thenReturn(userDao);
+
+        UserDetails userDetails = userService.loadUserByUsername("user");
+        assertEquals("user", userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword());
+    }
+
+    @Test
+    void loadUserByUsernameFail_Test() {
+        when(userRepository.getDistinctTopByUsername(any())).thenReturn(null);
+
+        try {
+            UserDetails userDetails = userService.loadUserByUsername("user");
+            fail();
+        } catch (UsernameNotFoundException e) {
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
     public void getAllUser_Success() {
 
         when(this.userRepository.findAll()).thenReturn(List.of(user));
@@ -58,7 +94,7 @@ public class UserServiceTest {
         ResponseEntity<Object> responseEntity = userService.getAllUser();
         ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),responseEntity.getStatusCodeValue());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), responseEntity.getStatusCodeValue());
     }
 
     @Test
@@ -135,6 +171,74 @@ public class UserServiceTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
         ResponseEntity<Object> responseEntity = userService.updateUser(anyLong(), UserDto.builder().build());
 
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void updateUser_Failed_EmailExists() {
+        UserDao userDao = UserDao.builder()
+                .id(1L)
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build();
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(userDao));
+        when(userRepository.save(any())).thenReturn(userDao);
+        when(userRepository.existsByEmail(userDao.getEmail())).thenReturn(true);
+        ResponseEntity<Object> responseEntity = userService.updateUser(anyLong(), UserDto.builder()
+                .id(1L)
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build());
+
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        UserDto data = (UserDto) Objects.requireNonNull(apiResponse).getData();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void updateUser_Failed_UsernameExists() {
+        UserDao userDao = UserDao.builder()
+                .id(1L)
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build();
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(userDao));
+        when(userRepository.save(any())).thenReturn(userDao);
+        when(userRepository.existsByUsername(userDao.getUsername())).thenReturn(true);
+        ResponseEntity<Object> responseEntity = userService.updateUser(anyLong(), UserDto.builder()
+                .id(1L)
+                .email("user@gmail.com")
+                .username("user")
+                .password("password")
+                .name("Seorang User")
+                .address("Malang")
+                .phone("081234567890")
+                .point(0)
+                .role("User")
+                .build());
+
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        UserDto data = (UserDto) Objects.requireNonNull(apiResponse).getData();
         assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
     }
 
