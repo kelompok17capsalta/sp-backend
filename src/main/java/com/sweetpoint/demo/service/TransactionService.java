@@ -38,7 +38,7 @@ public class TransactionService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    public ResponseEntity<Object> getAllTransaction(long l, TransactionDto build){
+    public ResponseEntity<Object> getAllTransaction(){
         try {
             log.info("Getting all product's information");
             List<TransactionDao> transactionDaoList = transactionRepository.findAll();
@@ -111,7 +111,7 @@ public class TransactionService {
         }
     }
 
-    public ResponseEntity<Object> getTransactionById(Long id, TransactionDto transaksi_paket_data){
+    public ResponseEntity<Object> getTransactionById(Long id){
         try{
             log.info("Getting transaction by id, id : {}", id);
             Optional<TransactionDao> transactionDaoOptional = transactionRepository.findById(id);
@@ -141,7 +141,7 @@ public class TransactionService {
         }
     }
 
-    public ResponseEntity<Object> createNewTransaction(long l, TransactionDto transactionDto){
+    public ResponseEntity<Object> createNewTransaction(TransactionDto transactionDto){
         try{
             Optional<UserDao> userDaoOptional = Optional.ofNullable(userRepository.findByUsername(transactionDto.getUser().getUsername()));
             if(userDaoOptional.isEmpty()){
@@ -355,6 +355,7 @@ public class TransactionService {
             return ResponseUtil.build(ConstantApp.ERROR,null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 }
