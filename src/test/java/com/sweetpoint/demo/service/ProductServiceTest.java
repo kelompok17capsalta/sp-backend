@@ -537,6 +537,98 @@ public class ProductServiceTest {
     }
 
     @Test
+    public void updateProduct_Denom_Failed() throws Exception {
+        ProductDao productDao = ProductDao.builder()
+                .id(1L)
+                .productName("Nama")
+                .denom(100000)
+                .category("Pulsa")
+                .descriptions("Test")
+                .points(100)
+                .stock(10)
+                .image("test.jpeg")
+                .build();
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(productDao));
+        when(productRepository.save(any())).thenReturn(productDao);
+        ResponseEntity<Object> responseEntity = productService.updateProduct(1L, ProductDto.builder()
+                .denom(0)
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        ProductDto data = (ProductDto) Objects.requireNonNull(apiResponse).getData();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void updateProduct_Point_Failed() throws Exception {
+        ProductDao productDao = ProductDao.builder()
+                .id(1L)
+                .productName("Nama")
+                .denom(100000)
+                .category("Pulsa")
+                .descriptions("Test")
+                .points(100)
+                .stock(10)
+                .image("test.jpeg")
+                .build();
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(productDao));
+        when(productRepository.save(any())).thenReturn(productDao);
+        ResponseEntity<Object> responseEntity = productService.updateProduct(1L, ProductDto.builder()
+                .points(0)
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        ProductDto data = (ProductDto) Objects.requireNonNull(apiResponse).getData();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void updateProduct_Stock_Failed() throws Exception {
+        ProductDao productDao = ProductDao.builder()
+                .id(1L)
+                .productName("Nama")
+                .denom(100000)
+                .category("Pulsa")
+                .descriptions("Test")
+                .points(100)
+                .stock(10)
+                .image("test.jpeg")
+                .build();
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(productDao));
+        when(productRepository.save(any())).thenReturn(productDao);
+        ResponseEntity<Object> responseEntity = productService.updateProduct(1L, ProductDto.builder()
+                .stock(0)
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        ProductDto data = (ProductDto) Objects.requireNonNull(apiResponse).getData();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    public void updateProduct_Category_Failed() throws Exception {
+        ProductDao productDao = ProductDao.builder()
+                .id(1L)
+                .productName("Nama")
+                .denom(100000)
+                .category("Pulsa")
+                .descriptions("Test")
+                .points(100)
+                .stock(10)
+                .image("test.jpeg")
+                .build();
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(productDao));
+        when(productRepository.save(any())).thenReturn(productDao);
+        ResponseEntity<Object> responseEntity = productService.updateProduct(1L, ProductDto.builder()
+                .category("aaa")
+                .build());
+        ApiResponse apiResponse = (ApiResponse) responseEntity.getBody();
+        ProductDto data = (ProductDto) Objects.requireNonNull(apiResponse).getData();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), responseEntity.getStatusCodeValue());
+    }
+
+    @Test
     public void updateProduct_Failed() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
         ResponseEntity<Object> responseEntity = productService.updateProduct(anyLong(), ProductDto.builder().build());
