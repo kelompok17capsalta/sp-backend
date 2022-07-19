@@ -53,16 +53,18 @@ public class ProductService {
             List<ProductDto> productDtoList = new ArrayList<>();
 
             for (ProductDao productDao: productDaoList){
-                productDtoList.add(ProductDto.builder()
-                        .id(productDao.getId())
-                        .productName(productDao.getProductName())
-                        .denom(productDao.getDenom())
-                        .category(productDao.getCategory())
-                        .descriptions(productDao.getDescriptions())
-                        .points(productDao.getPoints())
-                        .stock(productDao.getStock())
-                        .image(productDao.getImage())
-                        .build());
+                if(productDtoList.size() < 10){
+                    productDtoList.add(ProductDto.builder()
+                            .id(productDao.getId())
+                            .productName(productDao.getProductName())
+                            .denom(productDao.getDenom())
+                            .category(productDao.getCategory())
+                            .descriptions(productDao.getDescriptions())
+                            .points(productDao.getPoints())
+                            .stock(productDao.getStock())
+                            .image(productDao.getImage())
+                            .build());
+                }
             }
 
             Collections.shuffle(productDtoList);
